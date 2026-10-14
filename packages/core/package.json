@@ -6,7 +6,17 @@
   "exports": {
     "./env": "./src/env.ts",
     "./db": "./src/db/index.ts",
-    "./db/schema": "./src/db/schema/index.ts"
+    "./db/schema": "./src/db/schema/index.ts",
+    "./db/query": "./src/db/query.ts",
+    "./github": "./src/github/api.ts",
+    "./mail": "./src/mail.ts",
+    "./tokens": "./src/tokens.ts",
+    "./links": "./src/links.ts",
+    "./polling": "./src/polling/detect-events.ts",
+    "./notifications/match": "./src/notifications/match.ts",
+    "./notifications/compose": "./src/notifications/compose.ts",
+    "./notifications/schedule": "./src/notifications/schedule.ts",
+    "./testing": "./src/testing/database.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -16,12 +26,21 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@octokit/auth-app": "^8.3.1",
+    "@octokit/plugin-retry": "^8.1.1",
+    "@octokit/plugin-throttling": "^11.0.5",
+    "@octokit/request-error": "^7.1.2",
+    "@octokit/rest": "^22.0.1",
     "drizzle-orm": "^0.45.4",
+    "nodemailer": "^10.1.0",
     "pg": "^8.23.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@testcontainers/postgresql": "^12.2.1",
+    "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.23.1",
-    "drizzle-kit": "^0.31.11"
+    "drizzle-kit": "^0.31.11",
+    "msw": "^3.0.3"
   }
 }

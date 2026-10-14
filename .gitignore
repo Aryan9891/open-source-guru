@@ -34,3 +34,5 @@ yarn-error.log*
 
 # plan file
 PLAN.md
+# local secrets (GitHub App private key)
+secrets/

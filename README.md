@@ -1,4 +1,4 @@
-# open-source-guru
+# Open Source Guru
 
 Get email alerts when issues in open-source repos you follow are opened with, or given, labels like
 "help wanted", and track your Open Source Contributions, through a web app or an API.
@@ -11,7 +11,9 @@ apps/
   worker/    pg-boss background jobs
   web/       Next.js web app + Fumadocs docs
 packages/
-  core/      Shared code: environment validation, Drizzle database schema and client
+  core/      Shared code: environment validation, database schema and client, GitHub client,
+             change detection, subscription matching, email sending, signed email links
+  emails/    React Email templates (compiled to dist/; the only package with a build step)
 docs/        Contributor documentation (e.g. GitHub App setup)
 ```
 
@@ -19,19 +21,24 @@ docs/        Contributor documentation (e.g. GitHub App setup)
 
 - Node.js 24 or later
 - pnpm 12 (`corepack enable` picks the version from `package.json`)
-- Docker with Docker Compose
+- Docker with Docker Compose (also used by the integration tests, through Testcontainers)
+- A GitHub App for development: see [docs/github-app.md](docs/github-app.md)
 
 ## Getting started
 
 ```bash
 pnpm install          # also installs the git hooks (lefthook)
-cp .env.example .env
+cp .env.example .env  # then fill in the secrets and the GitHub App values
 pnpm db:up            # Postgres on :5433, Mailpit on :1025 (SMTP) and :8025 (web UI)
+pnpm db:migrate
 pnpm dev              # api on :4000, worker, web on :3000
 ```
 
+Generate `BETTER_AUTH_SECRET` and `EMAIL_TOKEN_SECRET` with `openssl rand -base64 32`, and put the
+GitHub App's private key in `secrets/` (git-ignored), referenced by its absolute path.
+
 - Web app: http://localhost:3000 (docs at `/docs`)
-- API health: http://localhost:4000/health
+- API: http://localhost:4000 (health at `/health`, OpenAPI docs at `/docs`)
 - Mailpit (captured emails): http://localhost:8025
 
 ## Scripts

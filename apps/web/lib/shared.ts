@@ -1,2 +1,2 @@
-export const appName = "open-source-guru";
+export const appName = "Open Source Guru";
 export const docsRoute = "/docs";

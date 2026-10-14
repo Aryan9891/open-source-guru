@@ -7,6 +7,25 @@ export const baseEnvSchema = z.object({
   DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
 });
 
+/** The GitHub App used for sign-in and polling (see docs/github-app.md). */
+export const githubAppEnvSchema = z.object({
+  GITHUB_APP_ID: z.string().min(1),
+  GITHUB_APP_CLIENT_ID: z.string().min(1),
+  GITHUB_APP_CLIENT_SECRET: z.string().min(1),
+  GITHUB_APP_PRIVATE_KEY_PATH: z.string().min(1),
+  GITHUB_APP_INSTALLATION_ID: z.coerce.number().int().positive(),
+});
+
+/** Sending email and building links in emails. */
+export const emailEnvSchema = z.object({
+  /** Public URL of the web app, used in links (no trailing slash). */
+  WEB_URL: z.url().transform((url) => url.replace(/\/+$/, "")),
+  SMTP_URL: z.url({ protocol: /^smtps?$/ }),
+  EMAIL_FROM: z.string().min(3),
+  /** Secret for signed email links (unsubscribe, address verification). */
+  EMAIL_TOKEN_SECRET: z.string().min(32),
+});
+
 export class EnvError extends Error {
   override name = "EnvError";
 }

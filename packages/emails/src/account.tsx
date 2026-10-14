@@ -19,7 +19,7 @@ export interface WelcomeEmailProps {
 export function WelcomeEmail({ login, dashboardUrl, docsUrl }: WelcomeEmailProps) {
   return (
     <Layout
-      preview="Welcome to open-source-guru"
+      preview="Welcome to Open Source Guru"
       footerLinks={[
         { label: "Dashboard", href: dashboardUrl },
         { label: "Documentation", href: docsUrl },
@@ -48,13 +48,13 @@ export function VerifyEmail({ address, verifyUrl }: VerifyEmailProps) {
   return (
     <Layout
       preview="Confirm your email address"
-      footerNote="If you didn't add this address to open-source-guru, you can ignore this email."
+      footerNote="If you didn't add this address to Open Source Guru, you can ignore this email."
     >
       <Heading as="h1" style={{ fontSize: 20, margin: "0 0 12px" }}>
         Confirm your email address
       </Heading>
       <Text style={{ fontSize: 15 }}>
-        Confirm that you want to receive open-source-guru notifications at {address}. The link is
+        Confirm that you want to receive Open Source Guru notifications at {address}. The link is
         valid for 24 hours.
       </Text>
       <Button href={verifyUrl} style={buttonStyle}>
