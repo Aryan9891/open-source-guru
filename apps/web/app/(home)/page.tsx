@@ -1,7 +1,10 @@
 import Link from "next/link";
+import { AccountLink } from "@/components/auth/AccountLink";
 import { LogoMark } from "@/components/Logo";
 import { buttonClasses } from "@/components/ui/Button";
-import { appName, docsRoute, githubRepoUrl, signInRoute } from "@/lib/shared";
+import { ROUTES } from "@/lib/constants";
+import { appName, githubRepoUrl } from "@/lib/shared";
+import { HeroActions } from "./_components/HeroActions";
 import { RepoTeaser } from "./_components/RepoTeaser";
 import { ResourcesSection } from "./_components/ResourcesSection";
 
@@ -90,14 +93,7 @@ export default function HomePage() {
             {appName} emails you when issues you can help with appear in the open-source projects
             you care about. No more refreshing issue pages.
           </p>
-          <div className="flex flex-wrap gap-3">
-            <Link href={signInRoute} className={buttonClasses({ size: "lg" })}>
-              Sign in with GitHub
-            </Link>
-            <Link href={docsRoute} className={buttonClasses({ size: "lg", variant: "secondary" })}>
-              Read the docs
-            </Link>
-          </div>
+          <HeroActions />
         </div>
         <RepoTeaser />
       </section>
@@ -132,7 +128,7 @@ export default function HomePage() {
             key in your settings and manage subscriptions from scripts, bots or your own app.
           </p>
           <Link
-            href={docsRoute}
+            href={ROUTES.docs}
             className={buttonClasses({ variant: "secondary", className: "w-fit" })}
           >
             API documentation
@@ -183,12 +179,10 @@ export default function HomePage() {
             </a>
           </p>
           <nav aria-label="Footer" className="flex gap-6">
-            <Link href={docsRoute} className="hover:text-foreground">
+            <Link href={ROUTES.docs} className="hover:text-foreground">
               Docs
             </Link>
-            <Link href={signInRoute} className="hover:text-foreground">
-              Sign in
-            </Link>
+            <AccountLink variant="link" />
           </nav>
         </div>
       </footer>

@@ -39,6 +39,12 @@ folder under `apps/web/app/`, and in `packages/emails/src/`. Put new components 
   `verbatimModuleSyntax`).
 - Relative imports include the extension: `import { buildApp } from "./app.ts"`.
 
+## Web app routes
+
+Never write a path by hand: import `ROUTES` from `@/lib/constants` (`ROUTES.signIn`,
+`ROUTES.dashboard`…). When you add a page, add its route there first. The only exception is the
+type parameter of Next.js's typed routes, e.g. `PageProps<"/sign-in">`.
+
 ## Commits
 
 [Conventional Commits](https://www.conventionalcommits.org), checked by commitlint. See the

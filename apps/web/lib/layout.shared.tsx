@@ -1,16 +1,19 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import { AccountLink } from "@/components/auth/AccountLink";
+import { GitHubStars } from "@/components/GitHubStars";
 import { Logo } from "@/components/Logo";
-import { docsRoute, githubRepoUrl, signInRoute } from "./shared";
+import { ROUTES } from "./constants";
 
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
       title: <Logo />,
     },
-    githubUrl: githubRepoUrl,
     links: [
-      { text: "Docs", url: docsRoute, active: "nested-url" },
-      { type: "button", text: "Sign in", url: signInRoute, on: "nav" },
+      { text: "Docs", url: ROUTES.docs, active: "nested-url" },
+      // Right-hand side of the nav bar: GitHub (with stars), then Sign in / Dashboard.
+      { type: "custom", secondary: true, children: <GitHubStars /> },
+      { type: "custom", on: "nav", secondary: true, children: <AccountLink variant="button" /> },
     ],
   };
 }
