@@ -25,7 +25,13 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended"
+      "preset": "recommended",
+      "style": {
+        "noExcessiveLinesPerFile": {
+          "level": "error",
+          "options": { "maxLines": 300 }
+        }
+      }
     }
   },
   "overrides": [
@@ -35,6 +41,23 @@
         "domains": {
           "next": "recommended",
           "react": "recommended"
+        }
+      }
+    },
+    {
+      "includes": [
+        "apps/web/components/**/*.tsx",
+        "apps/web/app/**/_components/**/*.tsx",
+        "packages/emails/src/**/*.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": {
+              "level": "error",
+              "options": { "filenameCases": ["PascalCase"] }
+            }
+          }
         }
       }
     }

@@ -5,20 +5,20 @@ import {
   type VerifyEmailProps,
   WelcomeEmail,
   type WelcomeEmailProps,
-} from "./account.tsx";
+} from "./AccountEmails.tsx";
 import {
   NotificationEmail,
   type NotificationEmailProps,
   notificationSubject,
-} from "./notification.tsx";
+} from "./NotificationEmail.tsx";
 
-export type { VerifyEmailProps, WelcomeEmailProps } from "./account.tsx";
+export type { VerifyEmailProps, WelcomeEmailProps } from "./AccountEmails.tsx";
 export type {
   NotificationEmailProps,
   NotificationIssue,
   NotificationKind,
   NotificationSection,
-} from "./notification.tsx";
+} from "./NotificationEmail.tsx";
 
 export interface RenderedEmail {
   subject: string;

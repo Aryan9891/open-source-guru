@@ -55,6 +55,11 @@ GitHub App's private key in `secrets/` (git-ignored), referenced by its absolute
 | `pnpm db:migrate` | Applies migrations |
 | `pnpm db:studio` | Opens Drizzle Studio |
 
+## Coding standards
+
+File naming (PascalCase for React components), the 300-line limit per file and other conventions
+are described in [docs/coding-standards.md](docs/coding-standards.md). Most are enforced by Biome.
+
 ## Git hooks
 
 [lefthook](https://lefthook.dev) runs Biome on staged files before each commit (fixes are re-staged
