@@ -2,6 +2,152 @@
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
 
+/*
+ * Visual identity "Sunset Violet": palette from colorhunt.co (1F024C · 45056E · 8F1383 · E47676).
+ *
+ * 1. Brand colors: fixed values, e.g. `bg-violet`, `text-coral`. For the logo,
+ *    illustrations and brand moments.
+ * 2. Theme tokens: switch between light and dark, e.g. `bg-surface`, `text-muted`,
+ *    `bg-primary text-primary-foreground`. Use these in components.
+ * 3. Fumadocs: its `--color-fd-*` variables follow the theme tokens.
+ *
+ * Dark mode is the `.dark` class on <html> (toggled by Fumadocs); `dark:` follows it.
+ */
+
+/* 1. Brand colors */
+@theme {
+  /* The four identity colors */
+  --color-plum: #1f024c; /* Midnight Plum: ink on light, surface on dark */
+  --color-violet: #45056e; /* Royal Violet: primary */
+  --color-orchid: #8f1383; /* Orchid: accent */
+  --color-coral: #e47676; /* Coral Blush: the sweet note (fills on light, never small text) */
+
+  /* Brightened for dark backgrounds */
+  --color-violet-bright: #b57be0;
+  --color-orchid-bright: #d04fb8;
+
+  /* Light neutrals: lavender-tinted */
+  --color-mist: #fbf7fd; /* page */
+  --color-lilac: #f3eaf9; /* muted surface */
+  --color-haze: #e3d5ee; /* border */
+  --color-dusk: #6b5683; /* muted text */
+  --color-twilight: #4a3863; /* secondary text */
+
+  /* Dark neutrals: night garden */
+  --color-abyss: #12012e; /* page */
+  --color-nightshade: #2a0a57; /* muted surface */
+  --color-velvet: #3a1468; /* border */
+  --color-wisteria: #bca7d3; /* muted text */
+  --color-petal: #f6eefb; /* text */
+
+  /* Shape: soft, never sharp */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+}
+
+/* Fonts are loaded with next/font (app/layout.tsx), which sets these variables at runtime. */
+@theme inline {
+  --font-display: var(--font-bricolage), var(--font-geist-sans), system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* 2. Theme tokens, light then dark */
+:root {
+  --osg-background: var(--color-mist);
+  --osg-foreground: var(--color-plum);
+  --osg-surface: #ffffff;
+  --osg-surface-muted: var(--color-lilac);
+  --osg-border: var(--color-haze);
+  --osg-muted: var(--color-dusk);
+  --osg-subtle: var(--color-twilight);
+
+  --osg-primary: var(--color-violet);
+  --osg-primary-foreground: #ffffff;
+  --osg-accent: var(--color-orchid);
+  --osg-accent-foreground: #ffffff;
+  /* Coral is a fill on light (too light for small text on white) */
+  --osg-highlight: var(--color-coral);
+  --osg-highlight-foreground: var(--color-plum);
+
+  /* Issue labels and other pills */
+  --osg-chip: var(--color-lilac);
+  --osg-chip-foreground: var(--color-violet);
+
+  --osg-ring: var(--color-orchid);
+  --osg-danger: #b42318;
+  --osg-danger-foreground: #ffffff;
+}
+
+.dark {
+  --osg-background: var(--color-abyss);
+  --osg-foreground: var(--color-petal);
+  --osg-surface: var(--color-plum);
+  --osg-surface-muted: var(--color-nightshade);
+  --osg-border: var(--color-velvet);
+  --osg-muted: var(--color-wisteria);
+  --osg-subtle: #e0ccf0;
+
+  --osg-primary: var(--color-violet-bright);
+  --osg-primary-foreground: var(--color-abyss);
+  --osg-accent: var(--color-orchid-bright);
+  --osg-accent-foreground: var(--color-abyss);
+  --osg-highlight: var(--color-coral);
+  --osg-highlight-foreground: var(--color-plum);
+
+  --osg-chip: var(--color-nightshade);
+  --osg-chip-foreground: #e0ccf0;
+
+  --osg-ring: var(--color-orchid-bright);
+  --osg-danger: #f97066;
+  --osg-danger-foreground: var(--color-abyss);
+}
+
+@theme inline {
+  --color-background: var(--osg-background);
+  --color-foreground: var(--osg-foreground);
+  --color-surface: var(--osg-surface);
+  --color-surface-muted: var(--osg-surface-muted);
+  --color-border: var(--osg-border);
+  --color-muted: var(--osg-muted);
+  --color-subtle: var(--osg-subtle);
+  --color-primary: var(--osg-primary);
+  --color-primary-foreground: var(--osg-primary-foreground);
+  --color-accent: var(--osg-accent);
+  --color-accent-foreground: var(--osg-accent-foreground);
+  --color-highlight: var(--osg-highlight);
+  --color-highlight-foreground: var(--osg-highlight-foreground);
+  --color-chip: var(--osg-chip);
+  --color-chip-foreground: var(--osg-chip-foreground);
+  --color-ring: var(--osg-ring);
+  --color-danger: var(--osg-danger);
+  --color-danger-foreground: var(--osg-danger-foreground);
+}
+
+/* 3. Fumadocs (docs layout, sidebar, search) */
+:root,
+.dark,
+.dark #nd-sidebar {
+  --color-fd-background: var(--osg-background);
+  --color-fd-foreground: var(--osg-foreground);
+  --color-fd-muted: var(--osg-surface-muted);
+  --color-fd-muted-foreground: var(--osg-muted);
+  --color-fd-popover: var(--osg-surface);
+  --color-fd-popover-foreground: var(--osg-foreground);
+  --color-fd-card: var(--osg-surface);
+  --color-fd-card-foreground: var(--osg-foreground);
+  --color-fd-border: var(--osg-border);
+  --color-fd-primary: var(--osg-primary);
+  --color-fd-primary-foreground: var(--osg-primary-foreground);
+  --color-fd-secondary: var(--osg-surface-muted);
+  --color-fd-secondary-foreground: var(--osg-foreground);
+  --color-fd-accent: var(--osg-surface-muted);
+  --color-fd-accent-foreground: var(--osg-foreground);
+  --color-fd-ring: var(--osg-ring);
+}
+
 html {
   scrollbar-gutter: stable;
 }
