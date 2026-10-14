@@ -1,5 +1,7 @@
 // Test helper: a throwaway PostgreSQL (Testcontainers) with migrations applied.
+
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
+import { afterAll, beforeAll, beforeEach } from "vitest";
 import { createDatabase, type DatabaseConnection, runMigrations } from "../db/index.ts";
 import { sql } from "../db/query.ts";
 
@@ -29,6 +31,27 @@ export async function startTestDatabase(): Promise<TestDatabase> {
       await connection.close();
       await container.stop();
     },
+  };
+}
+
+/**
+ * Starts a database for the current test file and empties it before each test.
+ * Returns a getter, because the database only exists once `beforeAll` has run.
+ */
+export function useTestDatabase(): () => TestDatabase {
+  let database: TestDatabase | undefined;
+  beforeAll(async () => {
+    database = await startTestDatabase();
+  });
+  afterAll(async () => {
+    await database?.stop();
+  });
+  beforeEach(async () => {
+    await database?.reset();
+  });
+  return () => {
+    if (!database) throw new Error("The test database is not started yet");
+    return database;
   };
 }
 

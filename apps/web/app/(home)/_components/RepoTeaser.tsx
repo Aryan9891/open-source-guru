@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { type SubmitEvent, useId, useMemo, useState } from "react";
-import { buttonClasses } from "@/components/ui/button";
+import { buttonClasses } from "@/components/ui/Button";
 import { signInRoute } from "@/lib/shared";
 
 interface RepoLabel {

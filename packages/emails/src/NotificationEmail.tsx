@@ -1,5 +1,5 @@
 import { Heading, Link, Section, Text } from "@react-email/components";
-import { colors, Layout } from "./components/layout.tsx";
+import { colors, Layout } from "./components/Layout.tsx";
 
 export type NotificationKind = "instant" | "hourly" | "daily";
 

@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { LogoMark } from "@/components/logo";
-import { buttonClasses } from "@/components/ui/button";
+import { LogoMark } from "@/components/Logo";
+import { buttonClasses } from "@/components/ui/Button";
 import { appName, docsRoute, githubRepoUrl, signInRoute } from "@/lib/shared";
-import { RepoTeaser } from "./_components/repo-teaser";
-import { ResourcesSection } from "./_components/resources";
+import { RepoTeaser } from "./_components/RepoTeaser";
+import { ResourcesSection } from "./_components/ResourcesSection";
 
 const steps = [
   {

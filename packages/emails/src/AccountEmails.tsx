@@ -1,5 +1,5 @@
 import { Button, Heading, Text } from "@react-email/components";
-import { colors, Layout } from "./components/layout.tsx";
+import { colors, Layout } from "./components/Layout.tsx";
 
 const buttonStyle = {
   backgroundColor: colors.accent,
