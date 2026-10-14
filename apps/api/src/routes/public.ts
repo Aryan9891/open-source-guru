@@ -50,6 +50,7 @@ export const publicRoutes =
       {
         schema: {
           tags,
+          security: [],
           summary: "Check that a repository can be followed",
           params: repoParams,
           response: {
@@ -69,6 +70,7 @@ export const publicRoutes =
       {
         schema: {
           tags,
+          security: [],
           summary: "Labels of a repository, with their number of open issues",
           params: repoParams,
           response: {
@@ -104,6 +106,8 @@ export const publicRoutes =
       "/v1/public/email/verify",
       {
         schema: {
+          // Opened from emails, not part of the API reference.
+          hide: true,
           tags,
           summary: "Confirm an email address (link in email)",
           querystring: tokenQuery,
@@ -132,6 +136,8 @@ export const publicRoutes =
       "/v1/public/email/unsubscribe",
       {
         schema: {
+          // Opened from emails, not part of the API reference.
+          hide: true,
           tags,
           summary: "Unsubscribe confirmation page (link in email)",
           description: "Shows what will stop; nothing changes until the form is submitted.",
@@ -165,6 +171,8 @@ export const publicRoutes =
       "/v1/public/email/unsubscribe",
       {
         schema: {
+          // Opened from emails, not part of the API reference.
+          hide: true,
           tags,
           summary: "Unsubscribe (one-click, RFC 8058, or confirmation form)",
           querystring: tokenQuery,

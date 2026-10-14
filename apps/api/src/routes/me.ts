@@ -75,6 +75,7 @@ export const meRoutes =
         schema: {
           tags,
           summary: "Delete your account and all your data",
+          security: [{ session: [] }],
           description: "Only available from the web app (not with an API key).",
           response: { 204: z.null() },
         },

@@ -3,6 +3,7 @@ import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { ApiPage } from "@/components/ApiPage";
 import { getMDXComponents } from "@/components/MdxComponents";
 import { source } from "@/lib/source";
 
@@ -21,6 +22,18 @@ export default function Page({ params }: Props) {
 async function DocsContent({ params }: Pick<Props, "params">) {
   const page = source.getPage((await params).slug);
   if (!page) notFound();
+
+  if (page.data.type === "openapi") {
+    return (
+      <DocsPage toc={page.data.toc} full>
+        <DocsTitle>{page.data.title}</DocsTitle>
+        <DocsDescription>{page.data.description}</DocsDescription>
+        <DocsBody className="osg-openapi">
+          <ApiPage {...page.data.getOpenAPIPageProps()} />
+        </DocsBody>
+      </DocsPage>
+    );
+  }
 
   const MDX = page.data.body;
 

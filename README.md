@@ -54,6 +54,7 @@ GitHub App's private key in `secrets/` (git-ignored), referenced by its absolute
 | `pnpm db:generate` | Generates a migration from the Drizzle schema |
 | `pnpm db:migrate` | Applies migrations |
 | `pnpm db:studio` | Opens Drizzle Studio |
+| `pnpm --filter @osg/api openapi` | Regenerates `apps/web/openapi.json`, the spec behind the docs' API reference (a test fails when it's out of date) |
 
 ## Coding standards
 

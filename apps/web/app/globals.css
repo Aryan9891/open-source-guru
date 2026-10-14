@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
+@import "fumadocs-openapi/css/preset.css";
 
 /*
  * Visual identity "Sunset Violet": palette from colorhunt.co (1F024C · 45056E · 8F1383 · E47676).
@@ -146,6 +147,27 @@
   --color-fd-accent: var(--osg-surface-muted);
   --color-fd-accent-foreground: var(--osg-foreground);
   --color-fd-ring: var(--osg-ring);
+}
+
+/*
+ * API reference (fumadocs-openapi): its dense UI is drawn for small radii, so the scale is
+ * tightened there. The playground dialog is portaled outside the page and has no hook of its
+ * own: it's matched by its width class, and made smaller than its near full-screen default.
+ */
+.osg-openapi,
+[role="dialog"][class*="80rem"] {
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 14px;
+}
+
+@media (min-width: 40rem) {
+  [role="dialog"][class*="80rem"] {
+    width: min(64rem, calc(100vw - 4rem));
+    height: min(44rem, calc(100dvh - 4rem));
+  }
 }
 
 /* Docs: once the screen is wider than the layout (97rem, Fumadocs' default), border its sides. */
