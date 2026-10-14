@@ -1,0 +1,32 @@
+{
+  "name": "open-source-guru",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.11.2",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:generate": "pnpm --filter @osg/core db:generate",
+    "db:migrate": "pnpm --filter @osg/core db:migrate",
+    "db:studio": "pnpm --filter @osg/core db:studio",
+    "prepare": "lefthook install"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@types/node": "^24.0.0",
+    "lefthook": "^2.2.0",
+    "turbo": "^2.11.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.4"
+  }
+}
