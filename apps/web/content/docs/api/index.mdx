@@ -1,0 +1,101 @@
+---
+title: API quickstart
+description: Manage your subscriptions from your own scripts with a personal API key.
+---
+
+Everything the dashboard does with your subscriptions, email addresses and feed, you can do with
+the REST API.
+
+## 1. Create a key
+
+On the [API keys](/dashboard/api-keys) page of your dashboard, give the key a name (for example
+the script that will use it) and an expiry. The key starts with `osg_` and is **shown only once**:
+store it somewhere safe, such as a password manager or your CI's secrets.
+
+A key **acts as you**. If one leaks, revoke it on the same page: anything using it stops working
+right away.
+
+## 2. Make a request
+
+The API lives under `/api` on this site. Send the key in the `Authorization` header:
+
+```bash
+export OSG_API="https://<this site>/api"
+export OSG_KEY="osg_…"
+
+curl "$OSG_API/v1/me" -H "Authorization: Bearer $OSG_KEY"
+```
+
+## 3. Follow a repository
+
+```bash
+curl "$OSG_API/v1/me/subscriptions" \
+  -H "Authorization: Bearer $OSG_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "repo": "freeCodeCamp/freeCodeCamp", "labels": ["help wanted"] }'
+```
+
+Only `repo` is required. The other fields default to:
+
+| Field | Default | Values |
+|---|---|---|
+| `labels` | `[]` (every new issue) | Up to 20 label names |
+| `events` | Both | `issue.opened`, `issue.labeled` |
+| `labelMatch` | `any` | `any`, `all` |
+| `channels` | Your primary email, right away | `[{ "channelId": "…", "frequency": "instant" \| "hourly" \| "daily" }]` |
+
+Get your email addresses' `channelId`s from `GET /v1/me/channels`.
+
+## Endpoints
+
+| Method | Path | What it does |
+|---|---|---|
+| `GET` | `/v1/me` | Your profile and settings |
+| `PATCH` | `/v1/me` | Change `timezone` or `digestHour` |
+| `GET` | `/v1/me/subscriptions` | Your subscriptions |
+| `POST` | `/v1/me/subscriptions` | Follow a repository |
+| `PATCH` | `/v1/me/subscriptions/{id}` | Change labels, events, `labelMatch`, `status` (`active` / `paused`) or `channels` |
+| `DELETE` | `/v1/me/subscriptions/{id}` | Delete a subscription |
+| `GET` | `/v1/me/channels` | Your email addresses |
+| `POST` | `/v1/me/channels` | Add an email address (sends a confirmation email) |
+| `POST` | `/v1/me/channels/{id}/resend-verification` | Send the confirmation email again |
+| `PATCH` | `/v1/me/channels/{id}` | Rename an address |
+| `DELETE` | `/v1/me/channels/{id}` | Remove an address |
+| `GET` | `/v1/me/feed` | Issues that matched your subscriptions, newest first |
+| `GET` | `/v1/public/repos/{owner}/{repo}/labels` | A repository's labels and open-issue counts (no key needed) |
+
+For security, an API key **can't** create or revoke API keys, nor delete your account: those need
+you to be signed in on the website.
+
+## Paging through your feed
+
+`GET /v1/me/feed` returns up to `limit` items (1 to 100, default 30) and a `nextBefore` value.
+Pass it as `before` to get the next page; it's `null` on the last page.
+
+```bash
+curl "$OSG_API/v1/me/feed?limit=50" -H "Authorization: Bearer $OSG_KEY"
+# { "items": [...], "nextBefore": "2026-10-14T08:12:31.000Z" }
+
+curl "$OSG_API/v1/me/feed?limit=50&before=2026-10-14T08:12:31.000Z" \
+  -H "Authorization: Bearer $OSG_KEY"
+```
+
+## Errors
+
+Errors come back as JSON with a stable `error` code and a readable `message`:
+
+```json
+{ "error": "subscription_limit", "message": "You can have up to 50 subscriptions." }
+```
+
+| Status | Meaning |
+|---|---|
+| `400` | Invalid request (`invalid_request`, with the details in `issues`) |
+| `401` | Missing, invalid, expired or revoked key |
+| `404` | Not found, or not yours |
+| `422` | A limit or rule was hit (`subscription_limit`, `no_channel`, …) |
+| `429` | Too many requests (`rate_limited`) |
+
+## Rate limits
+
+Up to **300 requests per minute** per key. Over that, you get a `429`; wait a minute and retry.

@@ -148,6 +148,21 @@
   --color-fd-ring: var(--osg-ring);
 }
 
+/* Docs: once the screen is wider than the layout (97rem, Fumadocs' default), border its sides. */
+@media (min-width: 97rem) {
+  #nd-docs-layout::before {
+    content: "";
+    position: fixed;
+    inset-block: 0;
+    left: 50%;
+    width: var(--fd-layout-width, 97rem);
+    translate: -50% 0;
+    border-inline: 1px solid var(--color-fd-border);
+    pointer-events: none;
+    z-index: 30;
+  }
+}
+
 html {
   scrollbar-gutter: stable;
 }
