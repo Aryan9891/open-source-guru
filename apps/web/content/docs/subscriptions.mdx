@@ -1,0 +1,66 @@
+---
+title: Subscriptions
+description: Follow labels on a repository and choose which issues you hear about.
+---
+
+A **subscription** is one repository plus the labels you care about. Manage yours on the
+[Subscriptions](/dashboard/subscriptions) page of your dashboard.
+
+## Repository
+
+Any public GitHub repository works. Type it as `owner/name` (for example `freeCodeCamp/freeCodeCamp`)
+or paste its GitHub URL.
+
+## Labels
+
+Pick up to **20 labels** from the repository's list. Each one shows how many open issues have it,
+which helps to spot the labels the maintainers actually use.
+
+Labels are compared **without regard to case**: `Help Wanted` and `help wanted` are the same label.
+
+With **no label**, you hear about every new issue in the repository.
+
+### Any or all
+
+When you pick two labels or more, choose how they combine:
+
+| Option | An issue matches when it has |
+|---|---|
+| **Any of these labels** (default) | At least one of them |
+| **All of these labels** | Every one of them |
+
+For example, with `good first issue` and `documentation` set to **all**, you only hear about
+beginner-friendly documentation issues.
+
+## Events
+
+Choose what triggers an email. Both are on by default.
+
+| Event | When |
+|---|---|
+| **New issues** | An issue is opened with your labels |
+| **Labels added to existing issues** | One of your labels is added to an issue that's already open |
+
+With **all of these labels**, a label added to an existing issue triggers an email only once the
+issue has every label you picked: you hear about it when the set is complete.
+
+Pull requests are never included, only issues.
+
+## Emails
+
+Each subscription has its own frequency: right away, hourly or daily. See [Emails](/docs/emails).
+
+## Pause, edit or delete
+
+- **Pause** stops emails for a subscription without losing its settings. Issues that match while
+  it's paused are not sent later. **Resume** to start again.
+- **Edit** changes the labels, events, any / all and frequency. The repository can't be changed:
+  follow the other repository instead.
+- **Delete** removes the subscription. Issues it matched disappear from your feed.
+
+## Limits
+
+| | Limit |
+|---|---|
+| Subscriptions per account | 50 |
+| Labels per subscription | 20 |

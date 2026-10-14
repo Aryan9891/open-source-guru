@@ -39,6 +39,7 @@ export const apiKeyRoutes =
       {
         schema: {
           tags,
+          security: [{ session: [] }],
           summary: "Your personal API keys",
           response: { 200: z.array(apiKeyResponse) },
         },
@@ -61,6 +62,7 @@ export const apiKeyRoutes =
       {
         schema: {
           tags,
+          security: [{ session: [] }],
           summary: "Create a personal API key",
           description:
             "The key acts as you. It is shown only once: store it safely. Send it as `Authorization: Bearer <key>`.",
@@ -104,6 +106,7 @@ export const apiKeyRoutes =
       {
         schema: {
           tags,
+          security: [{ session: [] }],
           summary: "Revoke an API key",
           params: z.object({ id: z.uuid() }),
           response: { 204: z.null() },

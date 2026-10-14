@@ -1,0 +1,51 @@
+---
+title: How it works
+description: How Open Source Guru watches repositories, and how long an email takes.
+---
+
+## Watching repositories
+
+GitHub only sends live updates (webhooks) to a repository's owners, so Open Source Guru **checks
+each repository you follow every couple of minutes** through the GitHub API instead.
+
+Each repository is checked once, however many people follow it, then every matching subscription
+is notified. Checks use GitHub's conditional requests: when nothing changed, the check is almost
+free. That's what keeps the service running for a few euros a month.
+
+## What gets detected
+
+At each check, we compare the repository's recently updated issues with what we saw last time:
+
+- An issue we haven't seen before, opened since the last check, is a **new issue**, with its
+  labels at that moment.
+- A label present now but not last time was **added to an existing issue**.
+
+Pull requests are skipped.
+
+<Callout title="No flood when you subscribe">
+  The first time a repository is checked, we only take note of its current issues: nothing is
+  sent. And a new subscription only receives issues detected after it was created, never the
+  repository's past issues.
+</Callout>
+
+## How long it takes
+
+From an issue being opened (or labeled) on GitHub to the email in your inbox:
+
+1. **Up to a couple of minutes** until the next check of the repository.
+2. **About five minutes** for emails sent right away: matches that happen close together are
+   grouped into one email instead of several.
+3. For digests, the **next hour** (hourly) or **your digest hour** (daily).
+
+So expect emails sent right away within **about 5 to 10 minutes**.
+
+## Assigned or not
+
+We also keep track of each issue's assignees and state. Emails and your feed show whether an issue
+is **not assigned yet**, **assigned** to someone, or **closed**, as of the latest check, so you
+don't spend time on issues already taken.
+
+## Known limits
+
+- A label added then removed between two checks is not seen.
+- If a repository is deleted or made private, we stop checking it.

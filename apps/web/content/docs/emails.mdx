@@ -1,0 +1,60 @@
+---
+title: Emails
+description: How often you're emailed, where, and how to stop.
+---
+
+## Frequency
+
+Each subscription has its own frequency:
+
+| Frequency | What you get |
+|---|---|
+| **Right away** | An email within a few minutes. Matches that happen close together (within about five minutes) arrive in one email. |
+| **Hourly digest** | At most one email per hour, grouped by repository. |
+| **Daily digest** | One email a day, at your digest hour, grouped by repository. |
+
+Your **time zone** and **digest hour** are in [Settings](/dashboard/settings). Daily digests are
+sent during that hour, in your time zone.
+
+Nothing matched? No email: we never send empty digests.
+
+## What's in an email
+
+For each matching issue: its repository, title, labels, why it matched (new issue or label added),
+and whether it's already assigned. Every email links to your dashboard.
+
+## Email addresses
+
+Your **primary GitHub email** is added when you sign up, and can be used right away.
+
+You can add other addresses in [Settings](/dashboard/settings), for example a work address. Each
+new address gets a confirmation email, and **nothing else is sent to it until you click the
+link**. The link is valid for 24 hours; you can resend it from Settings.
+
+<Callout>
+  For now, the dashboard sends every subscription to your first active address. To send a
+  subscription to another address, use the [API](/docs/api): each subscription accepts a list of
+  addresses, each with its own frequency.
+</Callout>
+
+An address can show as:
+
+| Status | Meaning |
+|---|---|
+| **Active** | Emails are sent to it |
+| **Waiting for confirmation** | The confirmation link hasn't been clicked yet |
+| **Disabled** | Emails bounced, or you unsubscribed. Remove it and add it again to start over. |
+
+## Unsubscribing
+
+Every notification email gives you two ways out:
+
+- **Stop emails for owner/repo**, under each repository: that address stops receiving that
+  repository's notifications. Your other subscriptions keep going.
+- **Unsubscribe from all notifications**, in the footer: nothing more is sent to that address.
+
+Opening one of these links only shows what will stop; you confirm with a button. Email apps that
+offer a built-in **Unsubscribe** button (Gmail, Apple Mail, …) unsubscribe from all notifications
+to that address in one click.
+
+To pause instead, [pause the subscription](/docs/subscriptions#pause-edit-or-delete).

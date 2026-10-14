@@ -18,7 +18,7 @@ export function HeroActions() {
         </Link>
       )}
       {state.status === "signed-in" && (
-        <Link href={ROUTES.dashboard} className={buttonClasses({ size: "lg" })}>
+        <Link href={ROUTES.dashboard.feed} className={buttonClasses({ size: "lg" })}>
           Go to your dashboard
         </Link>
       )}

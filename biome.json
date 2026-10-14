@@ -7,7 +7,15 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!**/.next", "!**/.source", "!**/dist", "!**/coverage", "!**/drizzle/meta"]
+    "includes": [
+      "**",
+      "!**/.next",
+      "!**/.source",
+      "!**/dist",
+      "!**/coverage",
+      "!**/drizzle/meta",
+      "!apps/web/openapi.json"
+    ]
   },
   "formatter": {
     "enabled": true,

@@ -1,4 +1,16 @@
 {
   "title": "Documentation",
-  "pages": ["index"]
+  "pages": [
+    "index",
+    "getting-started",
+    "---Guides---",
+    "subscriptions",
+    "how-it-works",
+    "emails",
+    "account",
+    "---Developers---",
+    "api",
+    "---Help---",
+    "faq"
+  ]
 }

@@ -32,6 +32,20 @@ const healthResponse = z.object({
   database: z.enum(["ok", "unavailable"]),
 });
 
+/** Reference sections, in order. `x-displayName` is the docs sidebar title. */
+const openApiTags = [
+  { name: "Account", description: "Your profile and settings." },
+  { name: "Subscriptions", description: "Repositories and labels you follow." },
+  { name: "Channels", description: "Email addresses notifications are sent to." },
+  { name: "Feed", description: "Issues that matched your subscriptions." },
+  {
+    name: "API keys",
+    "x-displayName": "API keys",
+    description: "Personal API keys. Managing them needs a browser session, not a key.",
+  },
+  { name: "Public", description: "No authentication needed." },
+];
+
 export async function buildApp(deps: AppDependencies, options: FastifyServerOptions = {}) {
   const app = Fastify({ trustProxy: true, ...options }).withTypeProvider<ZodTypeProvider>();
 
@@ -93,9 +107,16 @@ export async function buildApp(deps: AppDependencies, options: FastifyServerOpti
       components: {
         securitySchemes: {
           apiKey: { type: "http", scheme: "bearer", description: "Personal API key (osg_…)" },
+          session: {
+            type: "apiKey",
+            in: "cookie",
+            name: "better-auth.session_token",
+            description: "Browser session from signing in on the website",
+          },
         },
       },
       security: [{ apiKey: [] }],
+      tags: openApiTags,
     },
     transform: jsonSchemaTransform,
   });
