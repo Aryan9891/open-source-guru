@@ -51,7 +51,25 @@ pnpm dev              # api on :4000, worker, web on :3000
 ## Git hooks
 
 [lefthook](https://lefthook.dev) runs Biome on staged files before each commit (fixes are re-staged
-automatically) and runs typecheck and tests before each push. CI runs the same checks.
+automatically), checks the commit message, and runs typecheck and tests before each push. CI runs
+the same checks.
+
+## Commit messages
+
+Commits follow [Conventional Commits](https://www.conventionalcommits.org), checked by
+[commitlint](https://commitlint.js.org) (see `commitlint.config.js`):
+
+```
+<type>(<optional scope>): <subject>
+
+feat(api): add subscription endpoints
+fix(worker): retry failed digests
+docs: explain how streaks are counted
+feat(api)!: rename /v1/me/feed to /v1/me/issues   ← breaking change
+```
+
+- **Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+- **Scopes (optional):** `api`, `worker`, `web`, `docs`, `core`, `emails`, `db`, `deps`, `ci`, `config`, `release`
 
 ## License
 
