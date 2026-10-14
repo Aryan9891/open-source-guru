@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { type SubmitEvent, useId, useMemo, useState } from "react";
 import { buttonClasses } from "@/components/ui/Button";
-import { signInRoute } from "@/lib/shared";
+import { ROUTES } from "@/lib/constants";
 
 interface RepoLabel {
   name: string;
@@ -100,7 +100,7 @@ export function RepoTeaser() {
     if (status.kind !== "ready") return;
     const params = new URLSearchParams({ repo: status.repo });
     for (const label of selected) params.append("label", label);
-    router.push(`${signInRoute}?${params.toString()}`);
+    router.push(`${ROUTES.signIn}?${params.toString()}`);
   }
 
   const visibleLabels = useMemo(() => {

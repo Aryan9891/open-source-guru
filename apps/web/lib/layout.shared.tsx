@@ -1,6 +1,7 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 import { Logo } from "@/components/Logo";
-import { docsRoute, githubRepoUrl, signInRoute } from "./shared";
+import { ROUTES } from "./constants";
+import { githubRepoUrl } from "./shared";
 
 export function baseOptions(): BaseLayoutProps {
   return {
@@ -9,8 +10,8 @@ export function baseOptions(): BaseLayoutProps {
     },
     githubUrl: githubRepoUrl,
     links: [
-      { text: "Docs", url: docsRoute, active: "nested-url" },
-      { type: "button", text: "Sign in", url: signInRoute, on: "nav" },
+      { text: "Docs", url: ROUTES.docs, active: "nested-url" },
+      { type: "button", text: "Sign in", url: ROUTES.signIn, on: "nav" },
     ],
   };
 }

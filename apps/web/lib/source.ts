@@ -1,7 +1,7 @@
 import { loader } from "fumadocs-core/source";
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
 import { defineDocs } from "fumadocs-mdx/macro";
-import { docsRoute } from "./shared";
+import { ROUTES } from "./constants";
 
 const docs = defineDocs({
   dir: "content/docs",
@@ -10,6 +10,6 @@ const docs = defineDocs({
 });
 
 export const source = loader({
-  baseUrl: docsRoute,
+  baseUrl: ROUTES.docs,
   source: docs.toFumadocsSource(),
 });
