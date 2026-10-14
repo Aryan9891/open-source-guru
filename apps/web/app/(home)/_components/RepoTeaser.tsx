@@ -2,8 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { type SubmitEvent, useId, useMemo, useState } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { buttonClasses } from "@/components/ui/Button";
 import { ROUTES } from "@/lib/constants";
+import { withPendingSubscription } from "@/lib/pending-subscription";
 
 interface RepoLabel {
   name: string;
@@ -41,6 +43,7 @@ function parseRepo(input: string): string | null {
  */
 export function RepoTeaser() {
   const router = useRouter();
+  const { state: auth } = useAuth();
   const ids = { repo: useId(), status: useId(), filter: useId() };
   const [repoInput, setRepoInput] = useState("");
   const [status, setStatus] = useState<Status>({ kind: "idle" });
@@ -98,9 +101,9 @@ export function RepoTeaser() {
 
   function continueToSignIn() {
     if (status.kind !== "ready") return;
-    const params = new URLSearchParams({ repo: status.repo });
-    for (const label of selected) params.append("label", label);
-    router.push(`${ROUTES.signIn}?${params.toString()}`);
+    // Signed-in users skip the sign-in page; the dashboard creates the subscription.
+    const target = auth.status === "signed-in" ? ROUTES.dashboard : ROUTES.signIn;
+    router.push(withPendingSubscription(target, { repo: status.repo, labels: [...selected] }));
   }
 
   const visibleLabels = useMemo(() => {

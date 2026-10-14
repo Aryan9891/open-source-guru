@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { LogoMark } from "@/components/Logo";
@@ -44,12 +45,13 @@ export default function SignInPage(props: PageProps<"/sign-in">) {
         </Suspense>
         <p className="text-center text-sm text-muted">
           No GitHub account?{" "}
-          <a
+          <Link
             href="https://github.com/signup"
             className="font-semibold text-primary hover:text-accent"
+            target="_blank"
           >
             Create one on GitHub
-          </a>
+          </Link>
           , then come back here.
         </p>
       </div>

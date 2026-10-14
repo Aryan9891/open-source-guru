@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { AccountLink } from "@/components/auth/AccountLink";
 import { LogoMark } from "@/components/Logo";
 import { buttonClasses } from "@/components/ui/Button";
 import { ROUTES } from "@/lib/constants";
 import { appName, githubRepoUrl } from "@/lib/shared";
+import { HeroActions } from "./_components/HeroActions";
 import { RepoTeaser } from "./_components/RepoTeaser";
 import { ResourcesSection } from "./_components/ResourcesSection";
 
@@ -91,17 +93,7 @@ export default function HomePage() {
             {appName} emails you when issues you can help with appear in the open-source projects
             you care about. No more refreshing issue pages.
           </p>
-          <div className="flex flex-wrap gap-3">
-            <Link href={ROUTES.signIn} className={buttonClasses({ size: "lg" })}>
-              Sign in with GitHub
-            </Link>
-            <Link
-              href={ROUTES.docs}
-              className={buttonClasses({ size: "lg", variant: "secondary" })}
-            >
-              Read the docs
-            </Link>
-          </div>
+          <HeroActions />
         </div>
         <RepoTeaser />
       </section>
@@ -190,9 +182,7 @@ export default function HomePage() {
             <Link href={ROUTES.docs} className="hover:text-foreground">
               Docs
             </Link>
-            <Link href={ROUTES.signIn} className="hover:text-foreground">
-              Sign in
-            </Link>
+            <AccountLink variant="link" />
           </nav>
         </div>
       </footer>
