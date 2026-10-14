@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
+import { EmailSettings } from "@/components/account/EmailSettings";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { type Frequency, FrequencyPicker } from "@/components/subscriptions/FrequencyPicker";
 import { RepoLabelPicker } from "@/components/subscriptions/RepoLabelPicker";
@@ -11,7 +12,6 @@ import { apiFetch } from "@/lib/api-client";
 import { ROUTES } from "@/lib/constants";
 import type { PendingSubscription } from "@/lib/pending-subscription";
 import type { CurrentUser } from "@/lib/session";
-import { EmailSettings } from "./EmailSettings";
 
 interface Channel {
   id: string;

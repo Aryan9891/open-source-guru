@@ -9,7 +9,7 @@ const HOURS = Array.from({ length: 24 }, (_, hour) => hour);
 
 const formatHour = (hour: number) => `${String(hour).padStart(2, "0")}:00`;
 
-/** Where emails go, the user's time zone and when daily digests arrive. */
+/** The user's time zone and when daily digests arrive; with `email`, also where emails go. */
 export function EmailSettings({
   email,
   timezone,
@@ -17,7 +17,8 @@ export function EmailSettings({
   onTimezoneChange,
   onDigestHourChange,
 }: {
-  email: string;
+  /** Shown as "Notifications go to …" (onboarding). */
+  email?: string;
   timezone: string;
   digestHour: number;
   onTimezoneChange: (timezone: string) => void;
@@ -31,10 +32,12 @@ export function EmailSettings({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-subtle">
-        Notifications go to <strong className="text-foreground">{email}</strong>, your primary email
-        on GitHub. You can add other addresses later in your settings.
-      </p>
+      {email && (
+        <p className="text-subtle">
+          Notifications go to <strong className="text-foreground">{email}</strong>, your primary
+          email on GitHub. You can add other addresses later in your settings.
+        </p>
+      )}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <label htmlFor={ids.timezone} className="text-sm font-semibold">
