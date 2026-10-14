@@ -4,5 +4,11 @@ export const ROUTES = {
   docs: "/docs",
   signIn: "/sign-in",
   onboarding: "/onboarding",
-  dashboard: "/dashboard",
+  /** Pages behind sign-in. */
+  dashboard: {
+    feed: "/dashboard",
+    subscriptions: "/dashboard/subscriptions",
+    settings: "/dashboard/settings",
+    apiKeys: "/dashboard/api-keys",
+  },
 } as const;

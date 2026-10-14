@@ -81,7 +81,7 @@ export function OnboardingForm({
         });
       }
       await refresh();
-      router.push(ROUTES.dashboard);
+      router.push(ROUTES.dashboard.feed);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Something went wrong. Try again.");
       setSaving(false);

@@ -22,7 +22,7 @@ export function AccountLink({ variant }: { variant: "button" | "link" }) {
   }
 
   const signedIn = state.status === "signed-in";
-  const href = signedIn ? ROUTES.dashboard : ROUTES.signIn;
+  const href = signedIn ? ROUTES.dashboard.feed : ROUTES.signIn;
   const text = signedIn ? "Dashboard" : "Sign in";
 
   if (variant === "link") {

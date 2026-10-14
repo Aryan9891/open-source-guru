@@ -21,7 +21,7 @@ export function RepoTeaser() {
   function continueToSignIn() {
     if (status.kind !== "ready") return;
     // Signed-in users skip the sign-in page; the dashboard creates the subscription.
-    const target = auth.status === "signed-in" ? ROUTES.dashboard : ROUTES.signIn;
+    const target = auth.status === "signed-in" ? ROUTES.dashboard.feed : ROUTES.signIn;
     router.push(withPendingSubscription(target, { repo: status.repo, labels: [...selected] }));
   }
 

@@ -68,11 +68,11 @@ async function SignInPanel({
   const params = await searchParams;
   const pending = readPendingSubscription(params);
 
-  if (await getCurrentUser()) redirect(withPendingSubscription(ROUTES.dashboard, pending));
+  if (await getCurrentUser()) redirect(withPendingSubscription(ROUTES.dashboard.feed, pending));
 
   const error = typeof params.error === "string" ? params.error : null;
   const redirects = {
-    callbackURL: withPendingSubscription(ROUTES.dashboard, pending),
+    callbackURL: withPendingSubscription(ROUTES.dashboard.feed, pending),
     newUserCallbackURL: withPendingSubscription(ROUTES.onboarding, pending),
     errorCallbackURL: withPendingSubscription(ROUTES.signIn, pending),
   };
