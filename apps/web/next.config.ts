@@ -23,8 +23,12 @@ const nextConfig: NextConfig = {
   },
   // The browser only talks to the web app; /api/* is forwarded to the Fastify API
   // over the internal network, so cookies stay first-party and CORS isn't needed.
+  // Better Auth is served at /api/auth/* on the API too, so that path is kept as is.
   async rewrites() {
-    return [{ source: "/api/:path*", destination: `${apiInternalUrl}/:path*` }];
+    return [
+      { source: "/api/auth/:path*", destination: `${apiInternalUrl}/api/auth/:path*` },
+      { source: "/api/:path*", destination: `${apiInternalUrl}/:path*` },
+    ];
   },
 };
 

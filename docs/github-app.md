@@ -24,8 +24,7 @@ organization's settings.
 | Setup URL | Empty | Empty |
 | Webhook → Active | ☐ Unchecked (we poll; we don't receive webhooks) | ☐ Unchecked |
 
-The callback URL goes through the web app's `/api/*` rewrite to Better Auth in the API. The exact
-path will be confirmed when Better Auth is set up in Phase 1a.
+The callback URL goes through the web app, which forwards `/api/auth/*` to Better Auth in the API.
 
 ### Permissions
 
@@ -53,13 +52,13 @@ token for polling. Users only *authorize* it when they sign in; they don't insta
 
 ## 3. Environment variables
 
-These will be added to `.env.example` in Phase 1a, when they are first used:
+Set these in `.env` (they're listed in `.env.example`):
 
 ```bash
 GITHUB_APP_ID=
 GITHUB_APP_CLIENT_ID=
 GITHUB_APP_CLIENT_SECRET=
-GITHUB_APP_PRIVATE_KEY_PATH=./secrets/github-app.private-key.pem
+GITHUB_APP_PRIVATE_KEY_PATH=/absolute/path/to/open-source-guru/secrets/github-app.private-key.pem  # absolute path
 GITHUB_APP_INSTALLATION_ID=
 ```
 

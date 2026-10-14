@@ -8,3 +8,7 @@ allowBuilds:
   lefthook: false # hooks are installed by the root "prepare" script
   sharp: false
   unrs-resolver: false
+  # From testcontainers (dockerode): optional native speedups with JS fallbacks, and a notice script.
+  cpu-features: false
+  ssh2: false
+  protobufjs: false
