@@ -13,6 +13,8 @@ interface RepoLabelPickerProps {
   question?: string;
   /** Starting value of the repository field. */
   initialRepo?: string;
+  /** Hide the repository field: only the labels of the loaded repository can change (editing). */
+  repoLocked?: boolean;
 }
 
 /** A repository field, then its labels as toggleable chips with open-issue counts. */
@@ -20,6 +22,7 @@ export function RepoLabelPicker({
   picker,
   question = "Which repository would you like to contribute to?",
   initialRepo = "",
+  repoLocked = false,
 }: RepoLabelPickerProps) {
   const { status, selected, load, toggle } = picker;
   const ids = { repo: useId(), status: useId(), filter: useId() };
@@ -48,46 +51,48 @@ export function RepoLabelPicker({
 
   return (
     <div className="flex flex-col gap-5">
-      <form onSubmit={onSubmit} className="flex flex-col gap-2" aria-describedby={ids.status}>
-        <label htmlFor={ids.repo} className="text-sm font-semibold">
-          {question}
-        </label>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <input
-            id={ids.repo}
-            value={repoInput}
-            onChange={(event) => setRepoInput(event.target.value)}
-            placeholder="owner/name or a GitHub URL"
-            autoComplete="off"
-            spellCheck={false}
-            className="min-h-12 flex-1 rounded-md border-2 border-border bg-background px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
-          />
-          <button
-            type="submit"
-            className={buttonClasses({ size: "lg", className: "rounded-md" })}
-            disabled={status.kind === "loading"}
-          >
-            {status.kind === "loading" ? "Loading…" : "See labels"}
-          </button>
-        </div>
-        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
-          Try
-          {EXAMPLES.map((example) => (
+      {!repoLocked && (
+        <form onSubmit={onSubmit} className="flex flex-col gap-2" aria-describedby={ids.status}>
+          <label htmlFor={ids.repo} className="text-sm font-semibold">
+            {question}
+          </label>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <input
+              id={ids.repo}
+              value={repoInput}
+              onChange={(event) => setRepoInput(event.target.value)}
+              placeholder="owner/name or a GitHub URL"
+              autoComplete="off"
+              spellCheck={false}
+              className="min-h-12 flex-1 rounded-md border-2 border-border bg-background px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+            />
             <button
-              key={example}
-              type="button"
-              onClick={() => {
-                setRepoInput(example);
-                setFilter("");
-                void load(example);
-              }}
-              className="rounded-full font-mono text-subtle underline decoration-border underline-offset-4 hover:text-accent"
+              type="submit"
+              className={buttonClasses({ size: "lg", className: "rounded-md" })}
+              disabled={status.kind === "loading"}
             >
-              {example}
+              {status.kind === "loading" ? "Loading…" : "See labels"}
             </button>
-          ))}
-        </p>
-      </form>
+          </div>
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
+            Try
+            {EXAMPLES.map((example) => (
+              <button
+                key={example}
+                type="button"
+                onClick={() => {
+                  setRepoInput(example);
+                  setFilter("");
+                  void load(example);
+                }}
+                className="rounded-full font-mono text-subtle underline decoration-border underline-offset-4 hover:text-accent"
+              >
+                {example}
+              </button>
+            ))}
+          </p>
+        </form>
+      )}
 
       <div id={ids.status} aria-live="polite">
         {status.kind === "error" && (

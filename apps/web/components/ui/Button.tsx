@@ -1,4 +1,4 @@
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "md" | "lg";
 
 const base =
@@ -10,6 +10,8 @@ const variants: Record<Variant, string> = {
   primary: "bg-primary text-primary-foreground hover:bg-accent hover:text-accent-foreground",
   secondary: "border border-border bg-surface text-primary hover:bg-surface-muted",
   ghost: "text-foreground hover:bg-surface-muted",
+  /** Destructive actions, after a confirmation. */
+  danger: "bg-danger text-danger-foreground hover:opacity-90",
 };
 
 const sizes: Record<Size, string> = {
