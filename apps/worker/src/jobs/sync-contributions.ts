@@ -4,6 +4,7 @@ import { contributionSyncs, contributions, users } from "@osg/core/db/schema";
 import type { FetchedContribution } from "@osg/core/github/contributions";
 import type { WorkerContext } from "../context.ts";
 import { rebuildContributionDays, upsertRepositories, yearRange } from "./contribution-store.ts";
+import { recomputeProgress } from "./recompute-progress.ts";
 
 export type SyncResult =
   | { outcome: "skipped" }
@@ -131,6 +132,7 @@ export async function syncContributionYear(
       return rows.filter((row) => row.counted).length;
     });
 
+    await recomputeProgress(ctx, userId);
     return {
       outcome: "synced",
       contributions: items.length,

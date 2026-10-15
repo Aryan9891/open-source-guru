@@ -56,3 +56,16 @@ export function computeStreak(
     lastCountedPeriod: last,
   };
 }
+
+/**
+ * A stored streak as of `today`: streaks are computed after each sync, so the current one may
+ * have ended since (no contribution in the previous period or this one).
+ */
+export function currentStreakAsOf(streak: Streak, period: StreakPeriod, today: IsoDate): Streak {
+  if (!streak.lastCountedPeriod) return streak;
+  const current = periodStart(today, period);
+  const ongoing =
+    streak.lastCountedPeriod === current ||
+    streak.lastCountedPeriod === addDays(current, -periodDays(period));
+  return ongoing ? streak : { ...streak, currentLength: 0, currentStart: null };
+}

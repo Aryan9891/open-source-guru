@@ -3,6 +3,7 @@ import { and, eq, exists, isNull, lt, or, sql } from "@osg/core/db/query";
 import { contributions, repositories, users } from "@osg/core/db/schema";
 import type { WorkerContext } from "../context.ts";
 import { rebuildContributionDays, upsertRepositories } from "./contribution-store.ts";
+import { recomputeProgress } from "./recompute-progress.ts";
 
 /** Repositories are re-checked weekly (PLAN.md §4.1). */
 export const RECLASSIFY_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
@@ -52,7 +53,7 @@ export async function reclassifyRepositories(
       facts.isPrivate !== repo.isPrivate ||
       isOpenSource !== repo.isOpenSource;
 
-    await db.transaction(async (tx) => {
+    const recounted = await db.transaction(async (tx) => {
       if (facts.isPrivate) {
         await tx
           .update(repositories)
@@ -61,7 +62,7 @@ export async function reclassifyRepositories(
       } else {
         await upsertRepositories(tx, [facts], now);
       }
-      if (!outcomeChanged) return;
+      if (!outcomeChanged) return [];
       changed++;
 
       // Classification depends on the user (ownership): update per contributor.
@@ -92,7 +93,9 @@ export async function reclassifyRepositories(
       for (const { userId, year } of affected) {
         await rebuildContributionDays(tx, userId, year, now);
       }
+      return [...new Set(affected.map((row) => row.userId))];
     });
+    for (const userId of recounted) await recomputeProgress(ctx, userId);
   }
   return { checked: due.length, changed };
 }

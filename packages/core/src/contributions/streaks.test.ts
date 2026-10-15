@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeStreak } from "./streaks.ts";
+import { computeStreak, currentStreakAsOf } from "./streaks.ts";
 
 // 2026-10-15 is a Thursday; its week started on Sunday 2026-10-11.
 const TODAY = "2026-10-15";
@@ -83,5 +83,27 @@ describe("weekly streaks", () => {
     // Weeks of 2026-12-20 and 2026-12-27 (which includes 2027-01-01).
     const streak = computeStreak(["2026-12-21", "2027-01-01"], "week", "2027-01-02");
     expect(streak).toMatchObject({ currentLength: 2, currentStart: "2026-12-20" });
+  });
+});
+
+describe("currentStreakAsOf", () => {
+  const stored = computeStreak(["2026-10-13", "2026-10-14"], "day", "2026-10-14");
+
+  it("keeps a streak that can still go on", () => {
+    expect(currentStreakAsOf(stored, "day", "2026-10-15")).toEqual(stored);
+  });
+
+  it("ends a streak whose last day is over, keeping the longest", () => {
+    expect(currentStreakAsOf(stored, "day", "2026-10-16")).toEqual({
+      ...stored,
+      currentLength: 0,
+      currentStart: null,
+    });
+  });
+
+  it("works for weekly streaks", () => {
+    const weekly = computeStreak(["2026-10-01"], "week", "2026-10-01");
+    expect(currentStreakAsOf(weekly, "week", "2026-10-10").currentLength).toBe(1);
+    expect(currentStreakAsOf(weekly, "week", "2026-10-11").currentLength).toBe(0);
   });
 });

@@ -4,6 +4,7 @@ import {
   contributionSyncs,
   contributions,
   repositories,
+  userStreaks,
   users,
 } from "@osg/core/db/schema";
 import { describe, expect, it } from "vitest";
@@ -86,6 +87,12 @@ describe("syncContributionYear", () => {
     ]);
     const sync = await database().db.query.contributionSyncs.findFirst();
     expect(sync).toMatchObject({ year: 2026, status: "done", restrictedCount: 4, lastError: null });
+    // Streaks are recomputed: March 3 and 5 aren't consecutive days, but share a week.
+    const streaks = await database().db.select().from(userStreaks).orderBy(asc(userStreaks.period));
+    expect(streaks.map((row) => [row.period, row.currentLength, row.longestLength])).toEqual([
+      ["day", 0, 1],
+      ["week", 0, 1],
+    ]);
   });
 
   it("updates what changed and removes what disappeared on the next sync", async () => {

@@ -21,6 +21,7 @@ import { contributionRoutes } from "./routes/contributions.ts";
 import { feedRoutes } from "./routes/feed.ts";
 import { meRoutes } from "./routes/me.ts";
 import { publicRoutes } from "./routes/public.ts";
+import { statsRoutes } from "./routes/stats.ts";
 import { subscriptionRoutes } from "./routes/subscriptions.ts";
 
 export interface AppDependencies extends ApiContext {
@@ -147,6 +148,7 @@ export async function buildApp(deps: AppDependencies, options: FastifyServerOpti
   await app.register(channelRoutes(deps));
   await app.register(feedRoutes(deps));
   await app.register(contributionRoutes(deps));
+  await app.register(statsRoutes(deps));
   await app.register(apiKeyRoutes(deps));
   await app.register(publicRoutes(deps));
 

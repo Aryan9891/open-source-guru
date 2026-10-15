@@ -21,7 +21,8 @@
     "./contributions/dates": "./src/contributions/dates.ts",
     "./contributions/licenses": "./src/contributions/licenses.ts",
     "./contributions/streaks": "./src/contributions/streaks.ts",
-    "./github/contributions": "./src/github/contributions.ts"
+    "./github/contributions": "./src/github/contributions.ts",
+    "./contributions/period": "./src/contributions/period.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

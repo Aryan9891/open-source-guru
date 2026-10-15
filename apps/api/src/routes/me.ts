@@ -15,6 +15,7 @@ const userResponse = z.object({
   image: z.string().nullable(),
   timezone: z.string(),
   digestHour: z.number().int(),
+  streakPeriod: z.enum(["week", "day"]).describe("Streaks count weeks (default) or days"),
   createdAt: z.date(),
 });
 
@@ -52,6 +53,7 @@ export const meRoutes =
                 .refine(isValidTimezone, "Must be an IANA time zone, e.g. Europe/Paris")
                 .optional(),
               digestHour: z.number().int().min(0).max(23).optional(),
+              streakPeriod: z.enum(["week", "day"]).optional(),
             })
             .strict(),
           response: { 200: userResponse },
