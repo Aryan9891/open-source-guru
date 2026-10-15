@@ -2,8 +2,12 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Breakdown } from "@/components/contributions/Breakdown";
+import { ContributionGraph } from "@/components/contributions/ContributionGraph";
 import { StreakSummary } from "@/components/contributions/StreakSummary";
+import { YearPicker } from "@/components/contributions/YearPicker";
 import { apiFetch } from "@/lib/api-client";
+import { ROUTES } from "@/lib/constants";
 import {
   contributionsText,
   type Excluded,
@@ -11,10 +15,7 @@ import {
   parseYear,
   type Stats,
 } from "@/lib/contributions";
-import { Breakdown } from "./Breakdown";
-import { ContributionGraph } from "./ContributionGraph";
 import { NotCounted } from "./NotCounted";
-import { YearPicker } from "./YearPicker";
 
 /** While the first sync runs, check again this often. */
 const FIRST_SYNC_POLL_MS = 10_000;
@@ -99,7 +100,7 @@ export function ContributionsView() {
             <ContributionGraph stats={stats} />
           )}
         </section>
-        <YearPicker years={stats.years} selected={year} />
+        <YearPicker years={stats.years} selected={year} basePath={ROUTES.dashboard.contributions} />
       </div>
 
       <StreakSummary streaks={stats.streaks} />

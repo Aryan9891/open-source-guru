@@ -10,6 +10,7 @@ export interface CurrentUser {
   timezone: string;
   digestHour: number;
   streakPeriod: "week" | "day";
+  profilePublic: boolean;
 }
 
 const apiInternalUrl = process.env.API_INTERNAL_URL ?? "http://localhost:4000";

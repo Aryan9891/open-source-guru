@@ -4,6 +4,8 @@ export const ROUTES = {
   docs: "/docs",
   signIn: "/sign-in",
   onboarding: "/onboarding",
+  /** Public profiles. */
+  profile: (login: string) => `/u/${login}`,
   /** Pages behind sign-in. */
   dashboard: {
     feed: "/dashboard",

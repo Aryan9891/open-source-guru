@@ -16,6 +16,7 @@ const userResponse = z.object({
   timezone: z.string(),
   digestHour: z.number().int(),
   streakPeriod: z.enum(["week", "day"]).describe("Streaks count weeks (default) or days"),
+  profilePublic: z.boolean().describe("Whether /u/{login} shows your profile (default: yes)"),
   createdAt: z.date(),
 });
 
@@ -54,6 +55,7 @@ export const meRoutes =
                 .optional(),
               digestHour: z.number().int().min(0).max(23).optional(),
               streakPeriod: z.enum(["week", "day"]).optional(),
+              profilePublic: z.boolean().optional(),
             })
             .strict(),
           response: { 200: userResponse },

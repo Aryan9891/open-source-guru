@@ -6,9 +6,12 @@ import { formatShortDate, type Stats, streakText } from "@/lib/contributions";
 export function StreakSummary({
   streaks,
   compact = false,
+  owner = true,
 }: {
   streaks: Stats["streaks"];
   compact?: boolean;
+  /** False on public profiles: no link to Settings, wording about "you". */
+  owner?: boolean;
 }) {
   const { period } = streaks;
   const streak = streaks[period];
@@ -16,9 +19,11 @@ export function StreakSummary({
   const hint =
     streak.current > 0 && streak.currentStart
       ? `Since ${period === "week" ? "the week of " : ""}${formatShortDate(streak.currentStart)}`
-      : period === "week"
-        ? "Contribute this week to start one."
-        : "Contribute today to start one.";
+      : !owner
+        ? "No streak at the moment."
+        : period === "week"
+          ? "Contribute this week to start one."
+          : "Contribute today to start one.";
 
   return (
     <div
@@ -36,12 +41,14 @@ export function StreakSummary({
         <span className="font-display text-3xl font-extrabold tracking-tight">
           {streakText(streak.longest, period)}
         </span>
-        <Link
-          href={ROUTES.dashboard.settings}
-          className="text-sm text-subtle underline-offset-4 hover:text-foreground hover:underline"
-        >
-          Count {period === "week" ? "days" : "weeks"} instead
-        </Link>
+        {owner && (
+          <Link
+            href={ROUTES.dashboard.settings}
+            className="text-sm text-subtle underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Count {period === "week" ? "days" : "weeks"} instead
+          </Link>
+        )}
       </div>
     </div>
   );

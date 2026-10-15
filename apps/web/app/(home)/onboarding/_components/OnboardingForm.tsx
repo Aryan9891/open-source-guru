@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { EmailSettings } from "@/components/account/EmailSettings";
+import { ProfileVisibility } from "@/components/account/ProfileVisibility";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { type Frequency, FrequencyPicker } from "@/components/subscriptions/FrequencyPicker";
 import { RepoLabelPicker } from "@/components/subscriptions/RepoLabelPicker";
@@ -46,6 +47,7 @@ export function OnboardingForm({
   const { status, selected, load } = picker;
   const [timezone, setTimezone] = useState(user.timezone);
   const [digestHour, setDigestHour] = useState(user.digestHour);
+  const [profilePublic, setProfilePublic] = useState(user.profilePublic);
   const [frequency, setFrequency] = useState<Frequency>("instant");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,7 +69,7 @@ export function OnboardingForm({
     }
     setSaving(true);
     try {
-      await apiFetch("/v1/me", { method: "PATCH", body: { timezone, digestHour } });
+      await apiFetch("/v1/me", { method: "PATCH", body: { timezone, digestHour, profilePublic } });
       if (withSubscription && status.kind === "ready") {
         const channels = await apiFetch<Channel[]>("/v1/me/channels");
         const channel = channels.find((candidate) => candidate.status === "active");
@@ -105,6 +107,9 @@ export function OnboardingForm({
           onTimezoneChange={setTimezone}
           onDigestHourChange={setDigestHour}
         />
+        <div className="mt-6 border-t border-border pt-6">
+          <ProfileVisibility login={user.login} value={profilePublic} onChange={setProfilePublic} />
+        </div>
       </Step>
 
       <Step number={2} title="Your first subscription">

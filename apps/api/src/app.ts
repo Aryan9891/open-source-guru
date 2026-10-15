@@ -21,6 +21,7 @@ import { contributionRoutes } from "./routes/contributions.ts";
 import { feedRoutes } from "./routes/feed.ts";
 import { goalRoutes } from "./routes/goals.ts";
 import { meRoutes } from "./routes/me.ts";
+import { profileRoutes } from "./routes/profiles.ts";
 import { publicRoutes } from "./routes/public.ts";
 import { statsRoutes } from "./routes/stats.ts";
 import { subscriptionRoutes } from "./routes/subscriptions.ts";
@@ -154,6 +155,7 @@ export async function buildApp(deps: AppDependencies, options: FastifyServerOpti
   await app.register(goalRoutes(deps));
   await app.register(apiKeyRoutes(deps));
   await app.register(publicRoutes(deps));
+  await app.register(profileRoutes(deps));
 
   return app;
 }

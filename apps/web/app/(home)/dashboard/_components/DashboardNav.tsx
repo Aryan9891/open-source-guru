@@ -46,7 +46,12 @@ export function DashboardNav({
         )}
         <div className="flex min-w-0 flex-col">
           <span className="truncate font-semibold">{name || login}</span>
-          <span className="truncate font-mono text-sm text-muted">@{login}</span>
+          <Link
+            href={ROUTES.profile(login)}
+            className="truncate font-mono text-sm text-muted underline-offset-4 hover:text-foreground hover:underline"
+          >
+            @{login}
+          </Link>
         </div>
       </div>
 
