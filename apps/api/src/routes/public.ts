@@ -3,6 +3,7 @@ import { z } from "zod";
 import type { ApiContext } from "../context.ts";
 import { ApiError } from "../errors.ts";
 import { describeUnsubscribe, unsubscribe, verifyEmailChannel } from "../services/channels.ts";
+import { escapeHtml, htmlPage } from "../services/pages.ts";
 import { getRepositoryLabels, resolveRepository } from "../services/repositories.ts";
 
 const repoParams = z.object({
@@ -10,39 +11,11 @@ const repoParams = z.object({
   repo: z.string().regex(/^[A-Za-z0-9_.-]{1,100}$/),
 });
 
-const escapeHtml = (value: string) =>
-  value.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
-
-/**
- * Minimal pages for the links in emails. They work without the web app; Phase 1b can replace
- * them with web pages.
- */
-function page(title: string, body: string): string {
-  return `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
-<title>${escapeHtml(title)} | Open Source Guru</title>
-<style>
-  body { font-family: system-ui, sans-serif; max-width: 32rem; margin: 4rem auto; padding: 0 1rem; line-height: 1.5; color: #1f2328; }
-  button { font: inherit; padding: .5rem 1rem; border-radius: .375rem; border: 1px solid #d1d9e0; background: #1f2328; color: #fff; cursor: pointer; }
-  a { color: #0969da; }
-  @media (prefers-color-scheme: dark) { body { background: #0d1117; color: #e6edf3; } button { background: #e6edf3; color: #0d1117; } a { color: #4493f8; } }
-</style>
-</head>
-<body>
-<h1>${escapeHtml(title)}</h1>
-${body}
-</body>
-</html>`;
-}
-
 export const publicRoutes =
   (ctx: ApiContext): FastifyPluginAsyncZod =>
   async (app) => {
     const tags = ["Public"];
+    const page = (title: string, body: string) => htmlPage(title, body, ctx.links.logo);
     const dashboardLink = `<p><a href="${escapeHtml(ctx.links.dashboard)}">Go to your dashboard</a></p>`;
 
     app.get(

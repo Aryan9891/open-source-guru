@@ -129,6 +129,8 @@ export const userStreaks = pgTable(
     currentStart: date({ mode: "string" }),
     /** First day of the last period with a contribution. */
     lastCountedPeriod: date({ mode: "string" }),
+    /** First day of the period a streak reminder was last sent for (one per period). */
+    reminderSentFor: date({ mode: "string" }),
     updatedAt: timestamp({ withTimezone: true })
       .defaultNow()
       .$onUpdate(() => new Date())

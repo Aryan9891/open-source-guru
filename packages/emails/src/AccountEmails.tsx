@@ -1,65 +1,63 @@
-import { Button, Heading, Text } from "@react-email/components";
-import { colors, Layout } from "./components/Layout.tsx";
+import { Heading, Text } from "@react-email/components";
+import {
+  type BrandProps,
+  headingStyle,
+  Layout,
+  PrimaryButton,
+  textStyle,
+} from "./components/Layout.tsx";
 
-const buttonStyle = {
-  backgroundColor: colors.accent,
-  borderRadius: 6,
-  color: "#ffffff",
-  fontSize: 14,
-  fontWeight: 600,
-  padding: "10px 16px",
-};
-
-export interface WelcomeEmailProps {
+export interface WelcomeEmailProps extends BrandProps {
   login: string;
   dashboardUrl: string;
   docsUrl: string;
 }
 
-export function WelcomeEmail({ login, dashboardUrl, docsUrl }: WelcomeEmailProps) {
+export function WelcomeEmail({ login, dashboardUrl, docsUrl, logoUrl }: WelcomeEmailProps) {
   return (
     <Layout
+      logoUrl={logoUrl}
       preview="Welcome to Open Source Guru"
       footerLinks={[
         { label: "Dashboard", href: dashboardUrl },
         { label: "Documentation", href: docsUrl },
       ]}
     >
-      <Heading as="h1" style={{ fontSize: 20, margin: "0 0 12px" }}>
+      <Heading as="h1" style={headingStyle}>
         Welcome, {login}!
       </Heading>
-      <Text style={{ fontSize: 15 }}>
+      <Text style={textStyle}>
         Follow the repositories you'd like to contribute to, pick the labels you care about (like
         "help wanted" or "good first issue"), and we'll email you when matching issues appear.
       </Text>
-      <Button href={dashboardUrl} style={buttonStyle}>
-        Add your first subscription
-      </Button>
+      <Text style={{ ...textStyle, margin: "0 0 20px" }}>
+        Your Open Source Contributions, streaks and goals are on your dashboard too.
+      </Text>
+      <PrimaryButton href={dashboardUrl}>Add your first subscription</PrimaryButton>
     </Layout>
   );
 }
 
-export interface VerifyEmailProps {
+export interface VerifyEmailProps extends BrandProps {
   address: string;
   verifyUrl: string;
 }
 
-export function VerifyEmail({ address, verifyUrl }: VerifyEmailProps) {
+export function VerifyEmail({ address, verifyUrl, logoUrl }: VerifyEmailProps) {
   return (
     <Layout
+      logoUrl={logoUrl}
       preview="Confirm your email address"
       footerNote="If you didn't add this address to Open Source Guru, you can ignore this email."
     >
-      <Heading as="h1" style={{ fontSize: 20, margin: "0 0 12px" }}>
+      <Heading as="h1" style={headingStyle}>
         Confirm your email address
       </Heading>
-      <Text style={{ fontSize: 15 }}>
-        Confirm that you want to receive Open Source Guru notifications at {address}. The link is
-        valid for 24 hours.
+      <Text style={{ ...textStyle, margin: "0 0 20px" }}>
+        Confirm that you want to receive Open Source Guru notifications at{" "}
+        <strong>{address}</strong>. The link is valid for 24 hours.
       </Text>
-      <Button href={verifyUrl} style={buttonStyle}>
-        Confirm email address
-      </Button>
+      <PrimaryButton href={verifyUrl}>Confirm email address</PrimaryButton>
     </Layout>
   );
 }

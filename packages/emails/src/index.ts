@@ -11,6 +11,14 @@ import {
   type NotificationEmailProps,
   notificationSubject,
 } from "./NotificationEmail.tsx";
+import {
+  GoalAchievedEmail,
+  type GoalAchievedEmailProps,
+  goalAchievedSubject,
+  StreakReminderEmail,
+  type StreakReminderEmailProps,
+  streakReminderSubject,
+} from "./ProgressEmails.tsx";
 
 export type { VerifyEmailProps, WelcomeEmailProps } from "./AccountEmails.tsx";
 export type {
@@ -19,6 +27,11 @@ export type {
   NotificationKind,
   NotificationSection,
 } from "./NotificationEmail.tsx";
+export type {
+  AchievedGoal,
+  GoalAchievedEmailProps,
+  StreakReminderEmailProps,
+} from "./ProgressEmails.tsx";
 
 export interface RenderedEmail {
   subject: string;
@@ -39,3 +52,9 @@ export const renderWelcomeEmail = (props: WelcomeEmailProps) =>
 
 export const renderVerifyEmail = (props: VerifyEmailProps) =>
   renderEmail("Confirm your email address", createElement(VerifyEmail, props));
+
+export const renderStreakReminderEmail = (props: StreakReminderEmailProps) =>
+  renderEmail(streakReminderSubject(props), createElement(StreakReminderEmail, props));
+
+export const renderGoalAchievedEmail = (props: GoalAchievedEmailProps) =>
+  renderEmail(goalAchievedSubject(props), createElement(GoalAchievedEmail, props));

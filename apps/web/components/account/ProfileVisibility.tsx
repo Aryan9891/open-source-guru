@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useId } from "react";
+import { Switch } from "@/components/ui/Switch";
 import { ROUTES } from "@/lib/constants";
 
 /** The public profile switch, with what it shows and doesn't. */
@@ -44,24 +45,13 @@ export function ProfileVisibility({
           email addresses or subscriptions.
         </p>
       </div>
-      <button
+      <Switch
         id={id}
-        type="button"
-        role="switch"
-        aria-checked={value}
-        aria-describedby={`${id}-description`}
+        checked={value}
+        onChange={onChange}
         disabled={disabled}
-        onClick={() => onChange(!value)}
-        className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:opacity-50 ${
-          value ? "bg-primary" : "bg-border"
-        }`}
-      >
-        <span
-          className={`inline-block size-5 rounded-full bg-surface shadow transition-transform ${
-            value ? "translate-x-6" : "translate-x-1"
-          }`}
-        />
-      </button>
+        describedBy={`${id}-description`}
+      />
     </div>
   );
 }

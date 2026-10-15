@@ -158,6 +158,7 @@ async function sendChannelEmail(
     sections,
     dashboardUrl: ctx.links.dashboard,
     unsubscribeAllUrl,
+    logoUrl: ctx.links.logo,
   });
 
   const ids = toSend.map((row) => row.deliveryId);

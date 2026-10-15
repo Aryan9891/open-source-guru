@@ -39,7 +39,7 @@ describe("fanout and instant emails", () => {
       channelId: channel.id,
     });
     expect(email?.html).toContain(encodeURIComponent(token).slice(0, 20));
-    expect(email?.html).not.toContain("#8");
+    expect(email?.html).not.toContain("issues/8");
 
     const [delivery] = await database().db.select().from(deliveries);
     expect(delivery).toMatchObject({

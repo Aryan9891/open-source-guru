@@ -11,6 +11,8 @@ export interface CurrentUser {
   digestHour: number;
   streakPeriod: "week" | "day";
   profilePublic: boolean;
+  streakReminders: boolean;
+  goalEmails: boolean;
 }
 
 const apiInternalUrl = process.env.API_INTERNAL_URL ?? "http://localhost:4000";

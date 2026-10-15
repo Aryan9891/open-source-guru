@@ -85,3 +85,57 @@ export function measure(metric: GoalMetric, items: GoalContribution[], period: G
   const kind = KIND_OF[metric];
   return within.filter((item) => item.kind === kind).reduce((sum, item) => sum + item.count, 0);
 }
+
+/** [singular, plural] of what each metric counts. */
+const METRIC_NOUNS: Record<GoalMetric, [string, string]> = {
+  contributions: ["Open Source Contribution", "Open Source Contributions"],
+  active_days: ["active day", "active days"],
+  commits: ["commit", "commits"],
+  issues_opened: ["issue opened", "issues opened"],
+  prs_opened: ["pull request opened", "pull requests opened"],
+  prs_merged: ["pull request merged", "pull requests merged"],
+  reviews: ["review", "reviews"],
+  discussions: ["discussion", "discussions"],
+};
+
+const shortDate = new Intl.DateTimeFormat("en", { dateStyle: "medium", timeZone: "UTC" });
+const monthYear = new Intl.DateTimeFormat("en", {
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+const utc = (date: IsoDate) => new Date(`${date}T00:00:00Z`);
+
+/** "30 Open Source Contributions a month", "3 pull requests merged a week in acme/lib" */
+export function describeGoal(goal: {
+  metric: GoalMetric;
+  target: number;
+  recurrence: GoalRecurrence;
+  endsOn: IsoDate | null;
+  repoScope: "all" | "subscribed" | "repo";
+  repoFullName: string | null;
+}): string {
+  const noun = METRIC_NOUNS[goal.metric][goal.target === 1 ? 0 : 1];
+  const when =
+    goal.recurrence === "weekly"
+      ? " a week"
+      : goal.recurrence === "monthly"
+        ? " a month"
+        : goal.endsOn
+          ? ` by ${shortDate.format(utc(goal.endsOn))}`
+          : "";
+  const where =
+    goal.repoScope === "repo" && goal.repoFullName
+      ? ` in ${goal.repoFullName}`
+      : goal.repoScope === "subscribed"
+        ? " in repositories you follow"
+        : "";
+  return `${goal.target} ${noun}${when}${where}`;
+}
+
+/** "the week of Oct 11, 2026", "October 2026", "Oct 1, 2026 – Dec 31, 2026" */
+export function describePeriod(recurrence: GoalRecurrence, period: GoalPeriod): string {
+  if (recurrence === "weekly") return `the week of ${shortDate.format(utc(period.start))}`;
+  if (recurrence === "monthly") return monthYear.format(utc(period.start));
+  return `${shortDate.format(utc(period.start))} – ${shortDate.format(utc(period.end))}`;
+}

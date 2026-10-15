@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { alignStart, GOAL_HISTORY, type GoalContribution, goalPeriods, measure } from "./goals.ts";
+import {
+  alignStart,
+  describeGoal,
+  describePeriod,
+  GOAL_HISTORY,
+  type GoalContribution,
+  goalPeriods,
+  measure,
+} from "./goals.ts";
 
 // 2026-10-15 is a Thursday.
 const TODAY = "2026-10-15";
@@ -71,5 +79,39 @@ describe("measure", () => {
   it("counts merged pull requests by merge date", () => {
     expect(measure("prs_merged", items, week)).toBe(1);
     expect(measure("prs_merged", items, { start: "2026-09-27", end: "2026-10-03" })).toBe(0);
+  });
+});
+
+describe("describeGoal", () => {
+  const goal = {
+    metric: "contributions",
+    target: 30,
+    recurrence: "monthly",
+    endsOn: null,
+    repoScope: "all",
+    repoFullName: null,
+  } as const;
+
+  it("words goals and their periods", () => {
+    expect(describeGoal(goal)).toBe("30 Open Source Contributions a month");
+    expect(
+      describeGoal({
+        ...goal,
+        metric: "prs_merged",
+        target: 1,
+        recurrence: "weekly",
+        repoScope: "repo",
+        repoFullName: "acme/lib",
+      }),
+    ).toBe("1 pull request merged a week in acme/lib");
+    expect(describeGoal({ ...goal, recurrence: "none", endsOn: "2026-12-31" })).toBe(
+      "30 Open Source Contributions by Dec 31, 2026",
+    );
+    expect(describePeriod("monthly", { start: "2026-10-01", end: "2026-10-31" })).toBe(
+      "October 2026",
+    );
+    expect(describePeriod("weekly", { start: "2026-10-11", end: "2026-10-17" })).toBe(
+      "the week of Oct 11, 2026",
+    );
   });
 });

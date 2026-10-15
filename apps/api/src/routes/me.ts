@@ -17,6 +17,10 @@ const userResponse = z.object({
   digestHour: z.number().int(),
   streakPeriod: z.enum(["week", "day"]).describe("Streaks count weeks (default) or days"),
   profilePublic: z.boolean().describe("Whether /u/{login} shows your profile (default: yes)"),
+  streakReminders: z
+    .boolean()
+    .describe("Email when your streak needs a contribution: Fridays (weekly) or evenings (daily)"),
+  goalEmails: z.boolean().describe("Email when you reach a goal"),
   createdAt: z.date(),
 });
 
@@ -56,6 +60,8 @@ export const meRoutes =
               digestHour: z.number().int().min(0).max(23).optional(),
               streakPeriod: z.enum(["week", "day"]).optional(),
               profilePublic: z.boolean().optional(),
+              streakReminders: z.boolean().optional(),
+              goalEmails: z.boolean().optional(),
             })
             .strict(),
           response: { 200: userResponse },

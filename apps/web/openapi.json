@@ -72,6 +72,14 @@
                       "type": "boolean",
                       "description": "Whether /u/{login} shows your profile (default: yes)"
                     },
+                    "streakReminders": {
+                      "type": "boolean",
+                      "description": "Email when your streak needs a contribution: Fridays (weekly) or evenings (daily)"
+                    },
+                    "goalEmails": {
+                      "type": "boolean",
+                      "description": "Email when you reach a goal"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -87,6 +95,8 @@
                     "digestHour",
                     "streakPeriod",
                     "profilePublic",
+                    "streakReminders",
+                    "goalEmails",
                     "createdAt"
                   ],
                   "additionalProperties": false
@@ -124,6 +134,12 @@
                     ]
                   },
                   "profilePublic": {
+                    "type": "boolean"
+                  },
+                  "streakReminders": {
+                    "type": "boolean"
+                  },
+                  "goalEmails": {
                     "type": "boolean"
                   }
                 },
@@ -176,6 +192,14 @@
                       "type": "boolean",
                       "description": "Whether /u/{login} shows your profile (default: yes)"
                     },
+                    "streakReminders": {
+                      "type": "boolean",
+                      "description": "Email when your streak needs a contribution: Fridays (weekly) or evenings (daily)"
+                    },
+                    "goalEmails": {
+                      "type": "boolean",
+                      "description": "Email when you reach a goal"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -191,6 +215,8 @@
                     "digestHour",
                     "streakPeriod",
                     "profilePublic",
+                    "streakReminders",
+                    "goalEmails",
                     "createdAt"
                   ],
                   "additionalProperties": false

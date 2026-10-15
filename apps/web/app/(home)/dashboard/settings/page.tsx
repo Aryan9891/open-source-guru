@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { DeleteAccount } from "./_components/DeleteAccount";
 import { DeliverySettings } from "./_components/DeliverySettings";
 import { EmailAddresses } from "./_components/EmailAddresses";
+import { MotivationEmails } from "./_components/MotivationEmails";
 import { ProfileSettings } from "./_components/ProfileSettings";
 import { StreakSettings } from "./_components/StreakSettings";
 
@@ -54,6 +55,12 @@ export default function SettingsPage() {
       </Section>
       <Section title="Profile" description="Your Open Source Contributions, for everyone to see.">
         <ProfileSettings />
+      </Section>
+      <Section
+        title="Motivation emails"
+        description="Optional emails about your streak and goals. Each one has a link to stop them."
+      >
+        <MotivationEmails />
       </Section>
       <Section
         title="Streaks"

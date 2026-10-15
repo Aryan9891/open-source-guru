@@ -18,6 +18,7 @@ import { betterAuthRoutes } from "./plugins/better-auth.ts";
 import { apiKeyRoutes } from "./routes/api-keys.ts";
 import { channelRoutes } from "./routes/channels.ts";
 import { contributionRoutes } from "./routes/contributions.ts";
+import { emailPreferenceRoutes } from "./routes/email-preferences.ts";
 import { feedRoutes } from "./routes/feed.ts";
 import { goalRoutes } from "./routes/goals.ts";
 import { meRoutes } from "./routes/me.ts";
@@ -156,6 +157,7 @@ export async function buildApp(deps: AppDependencies, options: FastifyServerOpti
   await app.register(apiKeyRoutes(deps));
   await app.register(publicRoutes(deps));
   await app.register(profileRoutes(deps));
+  await app.register(emailPreferenceRoutes(deps));
 
   return app;
 }

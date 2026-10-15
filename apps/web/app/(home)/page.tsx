@@ -93,7 +93,7 @@ export default function HomePage() {
             {appName} emails you when issues you can help with appear in the open-source projects
             you care about. No more refreshing issue pages.
           </p>
-          <HeroActions />
+          <HeroActions shortText={true} />
         </div>
         <RepoTeaser />
       </section>

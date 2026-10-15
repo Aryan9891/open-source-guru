@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { type NotificationSection, renderNotificationEmail, renderVerifyEmail } from "./index.ts";
+import {
+  type NotificationSection,
+  renderGoalAchievedEmail,
+  renderNotificationEmail,
+  renderStreakReminderEmail,
+  renderVerifyEmail,
+} from "./index.ts";
 
 const section = (fullName: string, numbers: number[]): NotificationSection => ({
   fullName,
@@ -15,7 +21,10 @@ const section = (fullName: string, numbers: number[]): NotificationSection => ({
   })),
 });
 
+const LOGO = "https://osg.test/brand/osg-icon.png";
+
 const common = {
+  logoUrl: LOGO,
   dashboardUrl: "https://osg.test/dashboard",
   unsubscribeAllUrl: "https://osg.test/email/unsubscribe?token=all",
 };
@@ -67,9 +76,55 @@ describe("renderVerifyEmail", () => {
     const email = await renderVerifyEmail({
       address: "me@example.com",
       verifyUrl: "https://osg.test/api/v1/public/email/verify?token=abc",
+      logoUrl: LOGO,
     });
 
     expect(email.subject).toBe("Confirm your email address");
     expect(email.html).toContain("https://osg.test/api/v1/public/email/verify?token=abc");
+    // Every email has the logo, in brand colors.
+    expect(email.html).toContain(LOGO);
+    expect(email.html).toContain("#45056E");
+  });
+});
+
+describe("progress emails", () => {
+  const links = {
+    logoUrl: LOGO,
+    stopUrl: "https://osg.test/api/v1/public/email/preferences?token=stop",
+    settingsUrl: "https://osg.test/dashboard/settings",
+  };
+
+  it("reminds about a streak, with a way to stop", async () => {
+    const email = await renderStreakReminderEmail({
+      ...links,
+      period: "week",
+      length: 5,
+      contributionsUrl: "https://osg.test/dashboard/contributions",
+    });
+    expect(email.subject).toBe("Keep your 5-week streak going");
+    expect(email.text).toContain("this week");
+    expect(email.html).toContain("token=stop");
+  });
+
+  it("congratulates on goals", async () => {
+    const goal = {
+      title: "30 Open Source Contributions a month",
+      progress: 31,
+      target: 30,
+      periodLabel: "October 2026",
+    };
+    const one = await renderGoalAchievedEmail({
+      ...links,
+      goals: [goal],
+      goalsUrl: "https://osg.test/dashboard/goals",
+    });
+    expect(one.subject).toBe("Goal achieved: 30 Open Source Contributions a month");
+    expect(one.text).toContain("31 / 30");
+    const two = await renderGoalAchievedEmail({
+      ...links,
+      goals: [goal, goal],
+      goalsUrl: "https://osg.test/dashboard/goals",
+    });
+    expect(two.subject).toBe("2 goals achieved");
   });
 });

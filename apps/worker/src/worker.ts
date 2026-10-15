@@ -12,6 +12,7 @@ import { reclassifyRepositories } from "./jobs/classify-repos.ts";
 import { cleanup } from "./jobs/cleanup.ts";
 import { fanOutEvents } from "./jobs/fanout.ts";
 import { pollRepository } from "./jobs/poll-repo.ts";
+import { sendStreakReminders } from "./jobs/progress-emails.ts";
 import { findContributionSyncsDue } from "./jobs/schedule-contribution-syncs.ts";
 import { findRepositoriesDue } from "./jobs/schedule-polls.ts";
 import { sendDueNotifications } from "./jobs/send-notifications.ts";
@@ -60,6 +61,7 @@ const Queue = {
   scheduleContributionSyncs: "schedule-contribution-syncs",
   syncContributions: "sync-contributions",
   classifyRepos: "classify-repos",
+  sendReminders: "send-reminders",
 } as const;
 
 // Scheduled jobs: never more than one queued or running at a time.
@@ -71,6 +73,7 @@ for (const name of [
   Queue.cleanup,
   Queue.scheduleContributionSyncs,
   Queue.classifyRepos,
+  Queue.sendReminders,
 ]) {
   await boss.createQueue(name, { policy: "exclusive" });
 }
@@ -87,6 +90,8 @@ await boss.schedule(Queue.sendDigests, "5 * * * *");
 await boss.schedule(Queue.cleanup, "30 3 * * *");
 await boss.schedule(Queue.scheduleContributionSyncs, "* * * * *");
 await boss.schedule(Queue.classifyRepos, "15 4 * * *");
+// Hourly, after digests: reminders go out in the users' evening.
+await boss.schedule(Queue.sendReminders, "20 * * * *");
 
 await boss.work(Queue.schedulePolls, async () => {
   const repoIds = await findRepositoriesDue(ctx);
@@ -149,6 +154,11 @@ await boss.work<{ userId: string; year: number }>(Queue.syncContributions, async
 await boss.work(Queue.classifyRepos, async () => {
   const result = await reclassifyRepositories(ctx);
   if (result.checked > 0) logger.info(result, "repositories reclassified");
+});
+
+await boss.work(Queue.sendReminders, async () => {
+  const result = await sendStreakReminders(ctx);
+  if (result.sent > 0) logger.info(result, "streak reminders sent");
 });
 
 await boss.work(Queue.cleanup, async () => {

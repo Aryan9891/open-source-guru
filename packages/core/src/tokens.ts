@@ -8,7 +8,12 @@ export type EmailToken =
   /** Stop emails to a channel, for some subscriptions or (without `subscriptionIds`) all of them. */
   | { purpose: "unsubscribe"; channelId: string; subscriptionIds?: string[] }
   /** Confirm that the user owns an email address they added. */
-  | { purpose: "verify-email"; channelId: string; expiresAt: number };
+  | { purpose: "verify-email"; channelId: string; expiresAt: number }
+  /** Turn off an opt-in email (streak reminders, goal achieved). */
+  | { purpose: "email-preference"; userId: string; preference: EmailPreference };
+
+/** Opt-in emails that a link can turn off: the user's settings of the same name. */
+export type EmailPreference = "streakReminders" | "goalEmails";
 
 const VERSION = "v1";
 

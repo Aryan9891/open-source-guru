@@ -4,11 +4,12 @@ import { computeStreak } from "@osg/core/contributions/streaks";
 import { eq, sql } from "@osg/core/db/query";
 import { contributionDays, type StreakPeriod, userStreaks } from "@osg/core/db/schema";
 import type { WorkerContext } from "../context.ts";
+import { sendGoalAchievedEmail } from "./progress-emails.ts";
 
 /**
  * Recomputes a user's streaks, both periods, from their daily totals (PLAN.md §4.4), so
- * switching the period in Settings needs no recount; then their goals' progress (§4.5).
- * Returns the goal periods achieved just now.
+ * switching the period in Settings needs no recount; then their goals' progress (§4.5),
+ * emailing congratulations when goal emails are on. Returns the goal periods achieved just now.
  */
 export async function recomputeProgress(
   ctx: WorkerContext,
@@ -41,5 +42,7 @@ export async function recomputeProgress(
       },
     });
 
-  return refreshGoalProgress(ctx.db, userId, ctx.now());
+  const achieved = await refreshGoalProgress(ctx.db, userId, ctx.now());
+  await sendGoalAchievedEmail(ctx, userId, achieved);
+  return achieved;
 }
