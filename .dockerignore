@@ -1,0 +1,24 @@
+# Build context for docker/*.Dockerfile (built from the repo root).
+# Dependencies and build output are recreated inside the image.
+**/node_modules
+**/.next
+**/.source
+**/dist
+**/.turbo
+**/coverage
+**/*.tsbuildinfo
+out
+
+# Secrets never go into an image
+.env
+.env*.local
+secrets
+**/*.pem
+
+# Not needed to build
+.git
+.github
+.vscode
+.idea
+.claude
+PLAN.md

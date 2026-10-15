@@ -14,7 +14,7 @@ packages/
   core/      Shared code: environment validation, database schema and client, GitHub client,
              change detection, subscription matching, email sending, signed email links
   emails/    React Email templates (compiled to dist/; the only package with a build step)
-docs/        Contributor documentation (e.g. GitHub App setup)
+docs/        Contributor documentation (e.g. GitHub App setup, deployment)
 ```
 
 ## Requirements

@@ -1,4 +1,4 @@
-# Local development services. Production uses docker-compose.prod.yml (added later).
+# Local development services. Production uses docker-compose.prod.yml (see docs/deployment.md).
 name: open-source-guru
 
 services:
