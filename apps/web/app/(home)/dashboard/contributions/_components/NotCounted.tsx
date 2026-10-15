@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ROUTES } from "@/lib/constants";
 import { type Excluded, formatNumber, REASON_LABELS } from "@/lib/contributions";
 
 /** These aren't Open Source Contributions, so they're just "contributions". */
@@ -18,7 +20,13 @@ export function NotCounted({ excluded }: { excluded: Excluded }) {
           Not counted
         </h2>
         <p className="text-sm text-muted">
-          GitHub counts these too, which is why its total is usually higher. Only you see this.
+          GitHub counts these too, which is why its total is usually higher. Only you see this.{" "}
+          <Link
+            href={`${ROUTES.docs}/contributions#what-counts`}
+            className="text-subtle underline underline-offset-4 hover:text-foreground"
+          >
+            What counts
+          </Link>
         </p>
       </div>
 

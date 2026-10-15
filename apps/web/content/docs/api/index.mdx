@@ -55,7 +55,7 @@ sends real requests from the page: paste your key in the `Authorization` field.
 | Method | Path | What it does |
 |---|---|---|
 | `GET` | `/v1/me` | Your profile and settings |
-| `PATCH` | `/v1/me` | Change `timezone` or `digestHour` |
+| `PATCH` | `/v1/me` | Change `timezone`, `digestHour`, `streakPeriod`, `profilePublic`, `streakReminders` or `goalEmails` |
 | `GET` | `/v1/me/subscriptions` | Your subscriptions |
 | `POST` | `/v1/me/subscriptions` | Follow a repository |
 | `PATCH` | `/v1/me/subscriptions/{id}` | Change labels, events, `labelMatch`, `status` (`active` / `paused`) or `channels` |
@@ -66,6 +66,16 @@ sends real requests from the page: paste your key in the `Authorization` field.
 | `PATCH` | `/v1/me/channels/{id}` | Rename an address |
 | `DELETE` | `/v1/me/channels/{id}` | Remove an address |
 | `GET` | `/v1/me/feed` | Issues that matched your subscriptions, newest first |
+| `GET` | `/v1/me/stats?year=` | Open Source Contributions at a glance: total, daily counts, breakdowns, merged pull requests, streaks, years |
+| `GET` | `/v1/me/contributions?year=&kind=&repo=` | Your Open Source Contributions, newest first (paged with `cursor`) |
+| `GET` | `/v1/me/contributions/excluded?year=` | What wasn't counted, and why |
+| `POST` | `/v1/me/sync` | Refresh your contributions from GitHub (at most every 15 minutes) |
+| `GET` | `/v1/me/goals` | Your goals, with their progress |
+| `POST` | `/v1/me/goals` | Set a goal |
+| `PATCH` | `/v1/me/goals/{id}` | Change a goal's target, visibility or status |
+| `DELETE` | `/v1/me/goals/{id}` | Delete a goal |
+| `GET` | `/v1/public/profiles/{login}?year=` | A public profile (no key needed) |
+| `GET` | `/v1/public/profiles/{login}/badge.svg` | A README badge (no key needed; also at `/u/{login}/badge.svg`) |
 | `GET` | `/v1/public/repos/{owner}/{repo}/labels` | A repository's labels and open-issue counts (no key needed) |
 
 For security, an API key **can't** create or revoke API keys, nor delete your account: those need
@@ -97,7 +107,7 @@ Errors come back as JSON with a stable `error` code and a readable `message`:
 | `400` | Invalid request (`invalid_request`, with the details in `issues`) |
 | `401` | Missing, invalid, expired or revoked key |
 | `404` | Not found, or not yours |
-| `422` | A limit or rule was hit (`subscription_limit`, `no_channel`, …) |
+| `422` | A limit or rule was hit (`subscription_limit`, `goal_limit`, `no_channel`, …) |
 | `429` | Too many requests (`rate_limited`) |
 
 ## Rate limits
