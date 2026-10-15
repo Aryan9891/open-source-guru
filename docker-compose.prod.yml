@@ -1,0 +1,129 @@
+# Production stack. Runs on the VPS from the deploy directory, next to `.env`
+# (see .env.production.example) and `secrets/github-app.pem`:
+#
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# TLS and routing come from the nginx installed on the VPS and shared by its apps (vps-nginx
+# project). web and api publish their ports on 127.0.0.1 only, for nginx; nothing is reachable
+# from outside. Postgres sits on an internal network with no route out.
+name: osg-prod
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "5"
+
+x-backend: &backend
+  image: ghcr.io/tem-ctrl/open-source-guru-backend:latest
+  restart: unless-stopped
+  env_file: .env
+  environment:
+    DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}
+    WEB_URL: https://${DOMAIN}
+    GITHUB_APP_PRIVATE_KEY_PATH: /run/secrets/github_app_key
+  secrets:
+    - github_app_key
+  logging: *logging
+
+services:
+  web:
+    image: ghcr.io/tem-ctrl/open-source-guru-web:latest
+    restart: unless-stopped
+    environment:
+      API_INTERNAL_URL: http://api:4000
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    ports:
+      # For the host's nginx only (conf.d/open-source-guru.conf in vps-nginx).
+      - 127.0.0.1:${WEB_PORT:-3001}:3000
+    networks:
+      - app
+    logging: *logging
+
+  api:
+    <<: *backend
+    command: ["node", "apps/api/src/server.ts"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:4000/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    # Integrators call the API at api.<domain>; the browser goes through the web app's /api/* rewrite.
+    ports:
+      - 127.0.0.1:${API_PORT:-4001}:4000
+    networks:
+      - app
+      - db
+
+  worker:
+    <<: *backend
+    command: ["node", "apps/worker/src/worker.ts"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    # Lets pg-boss finish the jobs in progress on shutdown.
+    stop_grace_period: 60s
+    networks:
+      - db
+      - egress
+
+  migrate:
+    <<: *backend
+    command: ["node", "packages/core/src/db/migrate.ts"]
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - db
+
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - db
+    logging: *logging
+
+secrets:
+  github_app_key:
+    file: ./secrets/github-app.pem
+
+volumes:
+  postgres-data:
+
+networks:
+  # web → api, and outbound access (GitHub, SMTP) for the api.
+  app:
+  # Postgres and the backend services. No outbound access.
+  db:
+    internal: true
+  # Outbound access (GitHub, SMTP) for the worker.
+  egress:

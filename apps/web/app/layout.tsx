@@ -22,6 +22,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  // Makes Open Graph image URLs (e.g. on public profiles) absolute.
+  metadataBase: new URL("https://open-source-guru.dev"),
   title: {
     default: "Open Source Guru",
     template: "%s | Open Source Guru",

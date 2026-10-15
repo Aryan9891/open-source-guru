@@ -16,8 +16,8 @@ organization's settings.
 | Field | Development | Production |
 |---|---|---|
 | GitHub App name | `open-source-guru-dev` (must be unique on GitHub) | `open-source-guru` |
-| Homepage URL | `http://localhost:3000` | `https://<domain>` |
-| Callback URL | `http://localhost:3000/api/auth/callback/github` | `https://<domain>/api/auth/callback/github` |
+| Homepage URL | `http://localhost:3000` | `https://open-source-guru.dev` |
+| Callback URL | `http://localhost:3000/api/auth/callback/github` | `https://open-source-guru.dev/api/auth/callback/github` |
 | Expire user authorization tokens | ✅ Checked | ✅ Checked |
 | Request user authorization (OAuth) during installation | ☐ Unchecked | ☐ Unchecked |
 | Enable Device Flow | ☐ Unchecked | ☐ Unchecked |
