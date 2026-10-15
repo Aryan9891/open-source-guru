@@ -1,7 +1,8 @@
 // Better Auth tables (users, sessions, accounts, verifications, apikeys).
 // Generated with `pnpm --filter @osg/api auth:schema`, then edited:
 // - `githubId` is a unique bigint (GitHub IDs can exceed 32 bits),
-// - timestamps are stored with time zone.
+// - timestamps are stored with time zone,
+// - `streakPeriod` is typed.
 // After regenerating, re-apply these edits before running `pnpm db:generate`.
 import { relations, sql } from "drizzle-orm";
 import {
@@ -30,6 +31,12 @@ export const users = pgTable("users", {
   login: text("login").notNull(),
   timezone: text("timezone").default("UTC").notNull(),
   digestHour: integer("digest_hour").default(8).notNull(),
+  bio: text("bio"),
+  githubCreatedAt: timestamp("github_created_at", { withTimezone: true }),
+  profilePublic: boolean("profile_public").default(true).notNull(),
+  streakPeriod: text("streak_period").$type<"week" | "day">().default("week").notNull(),
+  streakReminders: boolean("streak_reminders").default(false).notNull(),
+  goalEmails: boolean("goal_emails").default(false).notNull(),
 });
 
 export const sessions = pgTable(

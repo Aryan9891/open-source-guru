@@ -2,6 +2,7 @@
 import { sql } from "drizzle-orm";
 import {
   bigint,
+  boolean,
   index,
   integer,
   jsonb,
@@ -56,6 +57,14 @@ export const repositories = pgTable(
     pollIntervalSeconds: integer().default(120).notNull(),
     lastPolledAt: timestamp({ withTimezone: true }),
     lastPollError: text(),
+    // Classification for Open Source Contributions (PLAN.md §4.1); null until classified.
+    ownerGithubId: bigint({ mode: "number" }),
+    isPrivate: boolean(),
+    isFork: boolean(),
+    /** SPDX identifier GitHub detected, e.g. `MIT`, `NOASSERTION`; null without a license. */
+    licenseSpdxId: text(),
+    isOpenSource: boolean(),
+    classifiedAt: timestamp({ withTimezone: true }),
     ...timestamps,
   },
   (table) => [
