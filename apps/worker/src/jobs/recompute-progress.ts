@@ -1,4 +1,5 @@
 import { dateInTimeZone } from "@osg/core/contributions/dates";
+import { type AchievedPeriod, refreshGoalProgress } from "@osg/core/contributions/goal-progress";
 import { computeStreak } from "@osg/core/contributions/streaks";
 import { eq, sql } from "@osg/core/db/query";
 import { contributionDays, type StreakPeriod, userStreaks } from "@osg/core/db/schema";
@@ -6,9 +7,13 @@ import type { WorkerContext } from "../context.ts";
 
 /**
  * Recomputes a user's streaks, both periods, from their daily totals (PLAN.md §4.4), so
- * switching the period in Settings needs no recount. Goal progress joins in later.
+ * switching the period in Settings needs no recount; then their goals' progress (§4.5).
+ * Returns the goal periods achieved just now.
  */
-export async function recomputeProgress(ctx: WorkerContext, userId: string): Promise<void> {
+export async function recomputeProgress(
+  ctx: WorkerContext,
+  userId: string,
+): Promise<AchievedPeriod[]> {
   const rows = await ctx.db
     .select({ date: contributionDays.date })
     .from(contributionDays)
@@ -35,4 +40,6 @@ export async function recomputeProgress(ctx: WorkerContext, userId: string): Pro
         updatedAt: ctx.now(),
       },
     });
+
+  return refreshGoalProgress(ctx.db, userId, ctx.now());
 }

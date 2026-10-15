@@ -8,6 +8,7 @@ export const ROUTES = {
   dashboard: {
     feed: "/dashboard",
     contributions: "/dashboard/contributions",
+    goals: "/dashboard/goals",
     subscriptions: "/dashboard/subscriptions",
     settings: "/dashboard/settings",
     apiKeys: "/dashboard/api-keys",

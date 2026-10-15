@@ -32,7 +32,7 @@ export function Breakdown({ stats }: { stats: Stats }) {
           {KINDS.map((kind) => (
             <li key={kind} className="grid grid-cols-[7.5rem_1fr_3rem] items-center gap-3 text-sm">
               <span className="text-subtle">{KIND_LABELS[kind]}</span>
-              <span className="h-2 rounded-full bg-surface-muted">
+              <span className="h-2 rounded-full bg-border">
                 <span
                   className="block h-full rounded-full bg-primary"
                   style={{ width: `${(stats.byKind[kind] / max) * 100}%` }}

@@ -10,6 +10,7 @@ import { SignOutButton } from "./SignOutButton";
 const items = [
   { href: ROUTES.dashboard.feed, label: "Feed" },
   { href: ROUTES.dashboard.contributions, label: "Contributions" },
+  { href: ROUTES.dashboard.goals, label: "Goals" },
   { href: ROUTES.dashboard.subscriptions, label: "Subscriptions" },
   { href: ROUTES.dashboard.settings, label: "Settings" },
   { href: ROUTES.dashboard.apiKeys, label: "API keys" },

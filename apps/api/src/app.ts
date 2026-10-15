@@ -19,6 +19,7 @@ import { apiKeyRoutes } from "./routes/api-keys.ts";
 import { channelRoutes } from "./routes/channels.ts";
 import { contributionRoutes } from "./routes/contributions.ts";
 import { feedRoutes } from "./routes/feed.ts";
+import { goalRoutes } from "./routes/goals.ts";
 import { meRoutes } from "./routes/me.ts";
 import { publicRoutes } from "./routes/public.ts";
 import { statsRoutes } from "./routes/stats.ts";
@@ -44,6 +45,7 @@ const openApiTags = [
     name: "Contributions",
     description: "Your Open Source Contributions, synced from GitHub.",
   },
+  { name: "Goals", description: "Targets for your Open Source Contributions." },
   {
     name: "API keys",
     "x-displayName": "API keys",
@@ -149,6 +151,7 @@ export async function buildApp(deps: AppDependencies, options: FastifyServerOpti
   await app.register(feedRoutes(deps));
   await app.register(contributionRoutes(deps));
   await app.register(statsRoutes(deps));
+  await app.register(goalRoutes(deps));
   await app.register(apiKeyRoutes(deps));
   await app.register(publicRoutes(deps));
 
