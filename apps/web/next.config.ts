@@ -26,6 +26,11 @@ const nextConfig: NextConfig = {
   // Better Auth is served at /api/auth/* on the API too, so that path is kept as is.
   async rewrites() {
     return [
+      // README badges have a short public URL next to the profile.
+      {
+        source: "/u/:login/badge.svg",
+        destination: `${apiInternalUrl}/v1/public/profiles/:login/badge.svg`,
+      },
       { source: "/api/auth/:path*", destination: `${apiInternalUrl}/api/auth/:path*` },
       { source: "/api/:path*", destination: `${apiInternalUrl}/:path*` },
     ];

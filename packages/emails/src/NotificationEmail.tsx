@@ -1,5 +1,13 @@
 import { Heading, Link, Section, Text } from "@react-email/components";
-import { colors, Layout } from "./components/Layout.tsx";
+import {
+  type BrandProps,
+  Chip,
+  colors,
+  headingStyle,
+  Layout,
+  linkStyle,
+  textStyle,
+} from "./components/Layout.tsx";
 
 export type NotificationKind = "instant" | "hourly" | "daily";
 
@@ -21,7 +29,7 @@ export interface NotificationSection {
   issues: NotificationIssue[];
 }
 
-export interface NotificationEmailProps {
+export interface NotificationEmailProps extends BrandProps {
   kind: NotificationKind;
   sections: NotificationSection[];
   dashboardUrl: string;
@@ -56,6 +64,7 @@ export function NotificationEmail({
   sections,
   dashboardUrl,
   unsubscribeAllUrl,
+  logoUrl,
 }: NotificationEmailProps) {
   const total = countIssues(sections);
   const intro =
@@ -65,6 +74,7 @@ export function NotificationEmail({
 
   return (
     <Layout
+      logoUrl={logoUrl}
       preview={notificationSubject({ kind, sections })}
       footerNote="You receive this email because you subscribed to these repositories on Open Source Guru."
       footerLinks={[
@@ -72,11 +82,18 @@ export function NotificationEmail({
         { label: "Unsubscribe from all notifications", href: unsubscribeAllUrl },
       ]}
     >
-      <Text style={{ fontSize: 15, margin: "0 0 8px" }}>{intro}</Text>
+      <Heading as="h1" style={{ ...headingStyle, fontSize: 20 }}>
+        {kind === "instant"
+          ? "New issues for you"
+          : kind === "hourly"
+            ? "Your hourly digest"
+            : "Your daily digest"}
+      </Heading>
+      <Text style={{ ...textStyle, color: colors.twilight, margin: "0 0 8px" }}>{intro}</Text>
       {sections.map((section) => (
-        <Section key={section.fullName} style={{ marginTop: 20 }}>
-          <Heading as="h2" style={{ fontSize: 16, margin: "0 0 8px" }}>
-            <Link href={section.url} style={{ color: colors.text }}>
+        <Section key={section.fullName} style={{ marginTop: 24 }}>
+          <Heading as="h2" style={{ fontSize: 15, margin: "0 0 10px", fontFamily: "monospace" }}>
+            <Link href={section.url} style={{ color: colors.plum }}>
               {section.fullName}
             </Link>
           </Heading>
@@ -84,29 +101,40 @@ export function NotificationEmail({
             <Section
               key={issue.number}
               style={{
-                borderLeft: `3px solid ${colors.accent}`,
-                margin: "0 0 12px",
-                paddingLeft: 12,
+                backgroundColor: colors.mist,
+                borderLeft: `3px solid ${colors.orchid}`,
+                borderRadius: 8,
+                margin: "0 0 10px",
+                padding: "10px 14px",
               }}
             >
-              <Text style={{ fontSize: 15, margin: 0 }}>
-                <Link href={issue.url} style={{ color: colors.accent, fontWeight: 600 }}>
+              <Text style={{ fontSize: 15, lineHeight: "22px", margin: "0 0 6px" }}>
+                <Link href={issue.url} style={linkStyle}>
                   #{issue.number} {issue.title}
                 </Link>
               </Text>
-              <Text style={{ color: colors.muted, fontSize: 13, margin: "2px 0 0" }}>
+              <Text
+                style={{ color: colors.dusk, fontSize: 13, lineHeight: "18px", margin: "0 0 6px" }}
+              >
                 {issue.reasons.join(" · ")}
-                {issue.labels.length > 0 && ` — labels: ${issue.labels.join(", ")}`}
               </Text>
-              <Text style={{ color: colors.muted, fontSize: 13, margin: "2px 0 0" }}>
-                {issue.assignees.length > 0
-                  ? `Assigned to ${issue.assignees.join(", ")}`
-                  : "Not assigned yet"}
+              <Text style={{ margin: 0 }}>
+                {issue.assignees.length > 0 ? (
+                  <Chip>Assigned to {issue.assignees.join(", ")}</Chip>
+                ) : (
+                  <Chip tone="coral">Not assigned yet</Chip>
+                )}
+                {issue.labels.map((label) => (
+                  <Chip key={label}>{label}</Chip>
+                ))}
               </Text>
             </Section>
           ))}
-          <Text style={{ fontSize: 12, margin: "4px 0 0" }}>
-            <Link href={section.unsubscribeUrl} style={{ color: colors.muted }}>
+          <Text style={{ fontSize: 12, margin: "6px 0 0" }}>
+            <Link
+              href={section.unsubscribeUrl}
+              style={{ color: colors.dusk, textDecoration: "underline" }}
+            >
               Stop emails for {section.fullName}
             </Link>
           </Text>

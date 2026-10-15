@@ -16,7 +16,15 @@
     "./notifications/match": "./src/notifications/match.ts",
     "./notifications/compose": "./src/notifications/compose.ts",
     "./notifications/schedule": "./src/notifications/schedule.ts",
-    "./testing": "./src/testing/database.ts"
+    "./testing": "./src/testing/database.ts",
+    "./contributions/classify": "./src/contributions/classify.ts",
+    "./contributions/dates": "./src/contributions/dates.ts",
+    "./contributions/licenses": "./src/contributions/licenses.ts",
+    "./contributions/streaks": "./src/contributions/streaks.ts",
+    "./github/contributions": "./src/github/contributions.ts",
+    "./contributions/period": "./src/contributions/period.ts",
+    "./contributions/goals": "./src/contributions/goals.ts",
+    "./contributions/goal-progress": "./src/contributions/goal-progress.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -34,6 +42,7 @@
     "drizzle-orm": "^0.45.4",
     "nodemailer": "^10.1.0",
     "pg": "^8.23.1",
+    "spdx-license-list": "^6.12.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {

@@ -80,6 +80,16 @@
   --osg-ring: var(--color-orchid);
   --osg-danger: #b42318;
   --osg-danger-foreground: #ffffff;
+
+  /*
+   * Contribution graph: none, then a one-hue violet ramp, light to dark. Validated as an
+   * ordinal ramp (monotone lightness, visible steps, palest step >= 2:1 on the card surface).
+   */
+  --osg-graph-0: var(--color-lilac);
+  --osg-graph-1: #c79be8;
+  --osg-graph-2: #9e5fd2;
+  --osg-graph-3: #7128aa;
+  --osg-graph-4: var(--color-violet);
 }
 
 .dark {
@@ -104,6 +114,13 @@
   --osg-ring: var(--color-orchid-bright);
   --osg-danger: #f97066;
   --osg-danger-foreground: var(--color-abyss);
+
+  /* Its own steps on the dark card (plum): the ramp flips, dark to light. */
+  --osg-graph-0: var(--color-nightshade);
+  --osg-graph-1: #6a2aab;
+  --osg-graph-2: #9152cf;
+  --osg-graph-3: #bf88e6;
+  --osg-graph-4: #e8d2f8;
 }
 
 @theme inline {
@@ -123,6 +140,11 @@
   --color-chip: var(--osg-chip);
   --color-chip-foreground: var(--osg-chip-foreground);
   --color-ring: var(--osg-ring);
+  --color-graph-0: var(--osg-graph-0);
+  --color-graph-1: var(--osg-graph-1);
+  --color-graph-2: var(--osg-graph-2);
+  --color-graph-3: var(--osg-graph-3);
+  --color-graph-4: var(--osg-graph-4);
   --color-danger: var(--osg-danger);
   --color-danger-foreground: var(--osg-danger-foreground);
 }

@@ -33,8 +33,9 @@ export function DeleteAccount() {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-subtle">
-        This deletes your account, subscriptions, email addresses and API keys, and stops every
-        notification. It can't be undone. Your GitHub account isn't affected.
+        This deletes your account, public profile, subscriptions, email addresses, contributions,
+        goals and API keys, and stops every email. It can't be undone. Your GitHub account isn't
+        affected.
       </p>
       <label htmlFor={inputId} className="flex flex-col gap-1 text-sm">
         <span>

@@ -60,6 +60,26 @@
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
                     },
+                    "streakPeriod": {
+                      "type": "string",
+                      "enum": [
+                        "week",
+                        "day"
+                      ],
+                      "description": "Streaks count weeks (default) or days"
+                    },
+                    "profilePublic": {
+                      "type": "boolean",
+                      "description": "Whether /u/{login} shows your profile (default: yes)"
+                    },
+                    "streakReminders": {
+                      "type": "boolean",
+                      "description": "Email when your streak needs a contribution: Fridays (weekly) or evenings (daily)"
+                    },
+                    "goalEmails": {
+                      "type": "boolean",
+                      "description": "Email when you reach a goal"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -73,6 +93,10 @@
                     "image",
                     "timezone",
                     "digestHour",
+                    "streakPeriod",
+                    "profilePublic",
+                    "streakReminders",
+                    "goalEmails",
                     "createdAt"
                   ],
                   "additionalProperties": false
@@ -101,6 +125,22 @@
                     "type": "integer",
                     "minimum": 0,
                     "maximum": 23
+                  },
+                  "streakPeriod": {
+                    "type": "string",
+                    "enum": [
+                      "week",
+                      "day"
+                    ]
+                  },
+                  "profilePublic": {
+                    "type": "boolean"
+                  },
+                  "streakReminders": {
+                    "type": "boolean"
+                  },
+                  "goalEmails": {
+                    "type": "boolean"
                   }
                 },
                 "additionalProperties": false
@@ -140,6 +180,26 @@
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
                     },
+                    "streakPeriod": {
+                      "type": "string",
+                      "enum": [
+                        "week",
+                        "day"
+                      ],
+                      "description": "Streaks count weeks (default) or days"
+                    },
+                    "profilePublic": {
+                      "type": "boolean",
+                      "description": "Whether /u/{login} shows your profile (default: yes)"
+                    },
+                    "streakReminders": {
+                      "type": "boolean",
+                      "description": "Email when your streak needs a contribution: Fridays (weekly) or evenings (daily)"
+                    },
+                    "goalEmails": {
+                      "type": "boolean",
+                      "description": "Email when you reach a goal"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -153,6 +213,10 @@
                     "image",
                     "timezone",
                     "digestHour",
+                    "streakPeriod",
+                    "profilePublic",
+                    "streakReminders",
+                    "goalEmails",
                     "createdAt"
                   ],
                   "additionalProperties": false
@@ -1224,6 +1288,1270 @@
         }
       }
     },
+    "/v1/me/contributions": {
+      "get": {
+        "summary": "Your Open Source Contributions, newest first",
+        "tags": [
+          "Contributions"
+        ],
+        "description": "Commits are reported per repository and day, with their number in `count`. Page with `cursor` (the previous response's `nextCursor`).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 2008,
+              "maximum": 2100
+            },
+            "in": "query",
+            "name": "year",
+            "required": false,
+            "description": "A calendar year; the last 12 months when omitted"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "commit",
+                "issue",
+                "pull_request",
+                "review",
+                "discussion"
+              ]
+            },
+            "in": "query",
+            "name": "kind",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "repo",
+            "required": false,
+            "description": "`owner/name`"
+          },
+          {
+            "schema": {
+              "default": 50,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "period": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "string",
+                          "description": "First day, YYYY-MM-DD"
+                        },
+                        "to": {
+                          "type": "string",
+                          "description": "Last day, YYYY-MM-DD"
+                        },
+                        "year": {
+                          "nullable": true,
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "from",
+                        "to",
+                        "year"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "commit",
+                              "issue",
+                              "pull_request",
+                              "review",
+                              "discussion"
+                            ]
+                          },
+                          "date": {
+                            "type": "string"
+                          },
+                          "occurredAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "title": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "url": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "repo": {
+                            "type": "object",
+                            "properties": {
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              },
+                              "license": {
+                                "nullable": true,
+                                "description": "SPDX identifier detected by GitHub",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "fullName",
+                              "url",
+                              "license"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "pullRequest": {
+                            "nullable": true,
+                            "type": "object",
+                            "properties": {
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "open",
+                                  "closed",
+                                  "merged"
+                                ]
+                              },
+                              "mergedAt": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "state",
+                              "mergedAt"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "kind",
+                          "date",
+                          "occurredAt",
+                          "count",
+                          "title",
+                          "url",
+                          "repo",
+                          "pullRequest"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "nextCursor": {
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "period",
+                    "items",
+                    "nextCursor"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/contributions/excluded": {
+      "get": {
+        "summary": "What wasn't counted, and why",
+        "tags": [
+          "Contributions"
+        ],
+        "description": "Contributions GitHub counts but that aren't Open Source Contributions: in your own repositories, in forks, or in repositories without an OSI-approved license. Private contributions are only known as a number per calendar year (`private`, null for the last 12 months). Never shown publicly.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 2008,
+              "maximum": 2100
+            },
+            "in": "query",
+            "name": "year",
+            "required": false,
+            "description": "A calendar year; the last 12 months when omitted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "period": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "string",
+                          "description": "First day, YYYY-MM-DD"
+                        },
+                        "to": {
+                          "type": "string",
+                          "description": "Last day, YYYY-MM-DD"
+                        },
+                        "year": {
+                          "nullable": true,
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "from",
+                        "to",
+                        "year"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "reasons": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "reason": {
+                            "type": "string",
+                            "enum": [
+                              "private",
+                              "fork",
+                              "own_repo",
+                              "no_license",
+                              "not_osi_approved",
+                              "unknown_license"
+                            ]
+                          },
+                          "count": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "reason",
+                          "count"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "repos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "license": {
+                            "nullable": true,
+                            "description": "SPDX identifier detected by GitHub",
+                            "type": "string"
+                          },
+                          "reason": {
+                            "type": "string",
+                            "enum": [
+                              "private",
+                              "fork",
+                              "own_repo",
+                              "no_license",
+                              "not_osi_approved",
+                              "unknown_license"
+                            ]
+                          },
+                          "count": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "fullName",
+                          "url",
+                          "license",
+                          "reason",
+                          "count"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "private": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "period",
+                    "reasons",
+                    "repos",
+                    "private"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/sync": {
+      "post": {
+        "summary": "Refresh your contributions from GitHub",
+        "tags": [
+          "Contributions"
+        ],
+        "description": "Asks for this year's contributions to be fetched again, within a minute or so. Ignored when the last refresh is less than 15 minutes old or one is already on its way.",
+        "responses": {
+          "202": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "requested": {
+                      "type": "boolean",
+                      "description": "False when a recent or pending sync makes it unnecessary"
+                    },
+                    "lastSyncedAt": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "requested",
+                    "lastSyncedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/stats": {
+      "get": {
+        "summary": "Your Open Source Contributions at a glance",
+        "tags": [
+          "Contributions"
+        ],
+        "description": "Totals, the daily graph, breakdowns by type and repository, recent merged pull requests, streaks and the years available. Only Open Source Contributions count: public, OSI-licensed repositories you don't own.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 2008,
+              "maximum": 2100
+            },
+            "in": "query",
+            "name": "year",
+            "required": false,
+            "description": "A calendar year; the last 12 months when omitted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "period": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "string",
+                          "description": "First day, YYYY-MM-DD"
+                        },
+                        "to": {
+                          "type": "string",
+                          "description": "Last day, YYYY-MM-DD"
+                        },
+                        "year": {
+                          "nullable": true,
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "from",
+                        "to",
+                        "year"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "total": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "days": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "date",
+                          "count"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "byKind": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "required": [
+                        "commit",
+                        "issue",
+                        "pull_request",
+                        "review",
+                        "discussion"
+                      ]
+                    },
+                    "byRepo": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "license": {
+                            "nullable": true,
+                            "description": "SPDX identifier detected by GitHub",
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "fullName",
+                          "url",
+                          "license",
+                          "count"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "mergedPullRequests": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "url": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "repo": {
+                            "type": "object",
+                            "properties": {
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              },
+                              "license": {
+                                "nullable": true,
+                                "description": "SPDX identifier detected by GitHub",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "fullName",
+                              "url",
+                              "license"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "mergedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "url",
+                          "repo",
+                          "mergedAt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "streaks": {
+                      "type": "object",
+                      "properties": {
+                        "period": {
+                          "type": "string",
+                          "enum": [
+                            "week",
+                            "day"
+                          ],
+                          "description": "The period chosen in Settings"
+                        },
+                        "week": {
+                          "type": "object",
+                          "properties": {
+                            "current": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "longest": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "currentStart": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "lastCountedPeriod": {
+                              "nullable": true,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "current",
+                            "longest",
+                            "currentStart",
+                            "lastCountedPeriod"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "day": {
+                          "type": "object",
+                          "properties": {
+                            "current": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "longest": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "currentStart": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "lastCountedPeriod": {
+                              "nullable": true,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "current",
+                            "longest",
+                            "currentStart",
+                            "lastCountedPeriod"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "period",
+                        "week",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "years": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "description": "Newest first"
+                    },
+                    "lastSyncedAt": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "period",
+                    "total",
+                    "days",
+                    "byKind",
+                    "byRepo",
+                    "mergedPullRequests",
+                    "streaks",
+                    "years",
+                    "lastSyncedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/goals": {
+      "get": {
+        "summary": "Your goals, with their progress",
+        "tags": [
+          "Goals"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "metric": {
+                        "type": "string",
+                        "enum": [
+                          "contributions",
+                          "active_days",
+                          "commits",
+                          "issues_opened",
+                          "prs_opened",
+                          "prs_merged",
+                          "reviews",
+                          "discussions"
+                        ]
+                      },
+                      "target": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "recurrence": {
+                        "type": "string",
+                        "enum": [
+                          "none",
+                          "weekly",
+                          "monthly"
+                        ]
+                      },
+                      "startsOn": {
+                        "type": "string"
+                      },
+                      "endsOn": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "repoScope": {
+                        "type": "string",
+                        "enum": [
+                          "all",
+                          "subscribed",
+                          "repo"
+                        ]
+                      },
+                      "repo": {
+                        "nullable": true,
+                        "type": "object",
+                        "properties": {
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "fullName",
+                          "url"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "isPublic": {
+                        "type": "boolean"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "active",
+                          "archived"
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "periods": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "start": {
+                              "type": "string"
+                            },
+                            "end": {
+                              "type": "string"
+                            },
+                            "progress": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "achievedAt": {
+                              "nullable": true,
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          },
+                          "required": [
+                            "start",
+                            "end",
+                            "progress",
+                            "achievedAt"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "description": "Oldest first; the last is the current period"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "metric",
+                      "target",
+                      "recurrence",
+                      "startsOn",
+                      "endsOn",
+                      "repoScope",
+                      "repo",
+                      "isPublic",
+                      "status",
+                      "createdAt",
+                      "periods"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Set a goal",
+        "tags": [
+          "Goals"
+        ],
+        "description": "Counts Open Source Contributions only. Weekly goals run Sunday to Saturday, monthly goals by calendar month (UTC, like GitHub's graph); one-off goals need `endsOn`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "metric": {
+                    "type": "string",
+                    "enum": [
+                      "contributions",
+                      "active_days",
+                      "commits",
+                      "issues_opened",
+                      "prs_opened",
+                      "prs_merged",
+                      "reviews",
+                      "discussions"
+                    ]
+                  },
+                  "target": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000
+                  },
+                  "recurrence": {
+                    "type": "string",
+                    "enum": [
+                      "none",
+                      "weekly",
+                      "monthly"
+                    ]
+                  },
+                  "startsOn": {
+                    "description": "Defaults to the current period",
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  },
+                  "endsOn": {
+                    "description": "One-off goals only (required for them)",
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  },
+                  "repoScope": {
+                    "default": "all",
+                    "type": "string",
+                    "enum": [
+                      "all",
+                      "subscribed",
+                      "repo"
+                    ]
+                  },
+                  "repo": {
+                    "description": "`owner/name`, with `repoScope: repo`",
+                    "type": "string"
+                  },
+                  "isPublic": {
+                    "default": false,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "metric",
+                  "target",
+                  "recurrence"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "metric": {
+                      "type": "string",
+                      "enum": [
+                        "contributions",
+                        "active_days",
+                        "commits",
+                        "issues_opened",
+                        "prs_opened",
+                        "prs_merged",
+                        "reviews",
+                        "discussions"
+                      ]
+                    },
+                    "target": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "recurrence": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "weekly",
+                        "monthly"
+                      ]
+                    },
+                    "startsOn": {
+                      "type": "string"
+                    },
+                    "endsOn": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "repoScope": {
+                      "type": "string",
+                      "enum": [
+                        "all",
+                        "subscribed",
+                        "repo"
+                      ]
+                    },
+                    "repo": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "fullName": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "fullName",
+                        "url"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "isPublic": {
+                      "type": "boolean"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "active",
+                        "archived"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "periods": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "start": {
+                            "type": "string"
+                          },
+                          "end": {
+                            "type": "string"
+                          },
+                          "progress": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "achievedAt": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end",
+                          "progress",
+                          "achievedAt"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "description": "Oldest first; the last is the current period"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "metric",
+                    "target",
+                    "recurrence",
+                    "startsOn",
+                    "endsOn",
+                    "repoScope",
+                    "repo",
+                    "isPublic",
+                    "status",
+                    "createdAt",
+                    "periods"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/goals/{id}": {
+      "patch": {
+        "summary": "Change a goal's target, visibility or status",
+        "tags": [
+          "Goals"
+        ],
+        "description": "To change what a goal measures, set a new goal.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "target": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000
+                  },
+                  "isPublic": {
+                    "type": "boolean"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "archived"
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "metric": {
+                      "type": "string",
+                      "enum": [
+                        "contributions",
+                        "active_days",
+                        "commits",
+                        "issues_opened",
+                        "prs_opened",
+                        "prs_merged",
+                        "reviews",
+                        "discussions"
+                      ]
+                    },
+                    "target": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "recurrence": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "weekly",
+                        "monthly"
+                      ]
+                    },
+                    "startsOn": {
+                      "type": "string"
+                    },
+                    "endsOn": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "repoScope": {
+                      "type": "string",
+                      "enum": [
+                        "all",
+                        "subscribed",
+                        "repo"
+                      ]
+                    },
+                    "repo": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "fullName": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "fullName",
+                        "url"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "isPublic": {
+                      "type": "boolean"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "active",
+                        "archived"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "periods": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "start": {
+                            "type": "string"
+                          },
+                          "end": {
+                            "type": "string"
+                          },
+                          "progress": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "achievedAt": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end",
+                          "progress",
+                          "achievedAt"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "description": "Oldest first; the last is the current period"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "metric",
+                    "target",
+                    "recurrence",
+                    "startsOn",
+                    "endsOn",
+                    "repoScope",
+                    "repo",
+                    "isPublic",
+                    "status",
+                    "createdAt",
+                    "periods"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a goal",
+        "tags": [
+          "Goals"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true,
+                  "enum": [
+                    null
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/me/api-keys": {
       "get": {
         "summary": "Your personal API keys",
@@ -1543,6 +2871,457 @@
           }
         }
       }
+    },
+    "/v1/public/profiles/{login}": {
+      "get": {
+        "summary": "A public profile",
+        "tags": [
+          "Public"
+        ],
+        "description": "Open Source Contributions, streaks and public goals of a user. 404 when the user doesn't exist or turned their profile off.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 2008,
+              "maximum": 2100
+            },
+            "in": "query",
+            "name": "year",
+            "required": false,
+            "description": "A calendar year; the last 12 months when omitted"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9-]{1,39}$"
+            },
+            "in": "path",
+            "name": "login",
+            "required": true
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "login": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "avatarUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "bio": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "githubUrl": {
+                      "type": "string"
+                    },
+                    "stats": {
+                      "type": "object",
+                      "properties": {
+                        "period": {
+                          "type": "object",
+                          "properties": {
+                            "from": {
+                              "type": "string",
+                              "description": "First day, YYYY-MM-DD"
+                            },
+                            "to": {
+                              "type": "string",
+                              "description": "Last day, YYYY-MM-DD"
+                            },
+                            "year": {
+                              "nullable": true,
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "from",
+                            "to",
+                            "year"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "total": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "days": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "date": {
+                                "type": "string"
+                              },
+                              "count": {
+                                "type": "integer",
+                                "minimum": -9007199254740991,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "date",
+                              "count"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "byKind": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "required": [
+                            "commit",
+                            "issue",
+                            "pull_request",
+                            "review",
+                            "discussion"
+                          ]
+                        },
+                        "byRepo": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              },
+                              "license": {
+                                "nullable": true,
+                                "description": "SPDX identifier detected by GitHub",
+                                "type": "string"
+                              },
+                              "count": {
+                                "type": "integer",
+                                "minimum": -9007199254740991,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "fullName",
+                              "url",
+                              "license",
+                              "count"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "mergedPullRequests": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "url": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "repo": {
+                                "type": "object",
+                                "properties": {
+                                  "fullName": {
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  },
+                                  "license": {
+                                    "nullable": true,
+                                    "description": "SPDX identifier detected by GitHub",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "fullName",
+                                  "url",
+                                  "license"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "mergedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "title",
+                              "url",
+                              "repo",
+                              "mergedAt"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "streaks": {
+                          "type": "object",
+                          "properties": {
+                            "period": {
+                              "type": "string",
+                              "enum": [
+                                "week",
+                                "day"
+                              ],
+                              "description": "The period chosen in Settings"
+                            },
+                            "week": {
+                              "type": "object",
+                              "properties": {
+                                "current": {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "longest": {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "currentStart": {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "lastCountedPeriod": {
+                                  "nullable": true,
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "current",
+                                "longest",
+                                "currentStart",
+                                "lastCountedPeriod"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "day": {
+                              "type": "object",
+                              "properties": {
+                                "current": {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "longest": {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "currentStart": {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "lastCountedPeriod": {
+                                  "nullable": true,
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "current",
+                                "longest",
+                                "currentStart",
+                                "lastCountedPeriod"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "period",
+                            "week",
+                            "day"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "years": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "description": "Newest first"
+                        },
+                        "lastSyncedAt": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "period",
+                        "total",
+                        "days",
+                        "byKind",
+                        "byRepo",
+                        "mergedPullRequests",
+                        "streaks",
+                        "years",
+                        "lastSyncedAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "goals": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "metric": {
+                            "type": "string"
+                          },
+                          "target": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "recurrence": {
+                            "type": "string",
+                            "enum": [
+                              "none",
+                              "weekly",
+                              "monthly"
+                            ]
+                          },
+                          "endsOn": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "repoScope": {
+                            "type": "string",
+                            "enum": [
+                              "all",
+                              "subscribed",
+                              "repo"
+                            ]
+                          },
+                          "repo": {
+                            "nullable": true,
+                            "type": "object",
+                            "properties": {
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "fullName",
+                              "url"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "current": {
+                            "nullable": true,
+                            "type": "object",
+                            "properties": {
+                              "start": {
+                                "type": "string"
+                              },
+                              "end": {
+                                "type": "string"
+                              },
+                              "progress": {
+                                "type": "integer",
+                                "minimum": -9007199254740991,
+                                "maximum": 9007199254740991
+                              },
+                              "achievedAt": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "start",
+                              "end",
+                              "progress",
+                              "achievedAt"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "metric",
+                          "target",
+                          "recurrence",
+                          "endsOn",
+                          "repoScope",
+                          "repo",
+                          "current"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "login",
+                    "name",
+                    "avatarUrl",
+                    "bio",
+                    "githubUrl",
+                    "stats",
+                    "goals"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/profiles/{login}/badge.svg": {
+      "get": {
+        "summary": "README badge",
+        "tags": [
+          "Public"
+        ],
+        "description": "An SVG badge with the Open Source Contributions of the last 12 months and the current streak. Cached for an hour. A grey \"not available\" badge (404) when the profile doesn't exist or is off.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9-]{1,39}$"
+            },
+            "in": "path",
+            "name": "login",
+            "required": true
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
     }
   },
   "security": [
@@ -1566,6 +3345,14 @@
     {
       "name": "Feed",
       "description": "Issues that matched your subscriptions."
+    },
+    {
+      "name": "Contributions",
+      "description": "Your Open Source Contributions, synced from GitHub."
+    },
+    {
+      "name": "Goals",
+      "description": "Targets for your Open Source Contributions."
     },
     {
       "name": "API keys",

@@ -44,6 +44,7 @@ export async function onUserCreated(
     login: typeof user.login === "string" ? user.login : "there",
     dashboardUrl: ctx.links.dashboard,
     docsUrl: ctx.links.docs,
+    logoUrl: ctx.links.logo,
   });
   await ctx.mailer.send({ to: user.email, ...email });
 }
@@ -53,7 +54,11 @@ export async function sendVerificationEmail(ctx: ApiContext, channel: Channel): 
     channel.id,
     new Date(ctx.now().getTime() + VERIFY_EMAIL_TTL_MS),
   );
-  const email = await renderVerifyEmail({ address: channel.config.address, verifyUrl });
+  const email = await renderVerifyEmail({
+    address: channel.config.address,
+    verifyUrl,
+    logoUrl: ctx.links.logo,
+  });
   await ctx.mailer.send({ to: channel.config.address, ...email });
 }
 

@@ -1,0 +1,1 @@
+ALTER TABLE "user_streaks" ADD COLUMN "reminder_sent_for" date;

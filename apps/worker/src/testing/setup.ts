@@ -16,6 +16,7 @@ import { one, type TestDatabase } from "@osg/core/testing";
 import type { WorkerContext } from "../context.ts";
 import { fanOutEvents } from "../jobs/fanout.ts";
 import { pollRepository } from "../jobs/poll-repo.ts";
+import { fakeContributions, USER_GITHUB_ID } from "./contributions.ts";
 
 export { useTestDatabase } from "@osg/core/testing";
 
@@ -72,11 +73,13 @@ export async function createWorkerTest(
   options: { frequency?: Frequency; timezone?: string; digestHour?: number } = {},
 ) {
   const github = fakeGitHub();
+  const contributions = fakeContributions();
   const mailer = createMemorySender();
   let now = new Date("2026-10-14T10:00:00Z");
   const ctx: WorkerContext = {
     db: database.db,
     github: github.api,
+    contributions: contributions.api,
     mailer,
     links: createEmailLinks({ webUrl: "https://osg.test", secret: SECRET }),
     log: { info: () => {}, warn: () => {}, error: () => {}, debug: () => {} },
@@ -93,7 +96,7 @@ export async function createWorkerTest(
       name: "Ada",
       email: "ada@example.com",
       emailVerified: true,
-      githubId: 1,
+      githubId: USER_GITHUB_ID,
       login: "ada",
       timezone: options.timezone ?? "UTC",
       digestHour: options.digestHour ?? 8,
@@ -135,7 +138,7 @@ export async function createWorkerTest(
     frequency: options.frequency ?? "instant",
   });
 
-  return { ctx, github, mailer, advance, repo, channel, subscription };
+  return { ctx, github, contributions, mailer, advance, user, repo, channel, subscription };
 }
 
 /** Polls once to initialize, then once more with a new matching issue (#7) and another (#8). */

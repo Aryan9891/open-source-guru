@@ -38,6 +38,8 @@ interface GitHubUser {
   name: string | null;
   /** Public profile email; null when the user keeps it private (the common case). */
   email: string | null;
+  bio?: string | null;
+  createdAt?: string;
   emails: { email: string; primary: boolean; verified: boolean }[] | "forbidden";
 }
 
@@ -59,6 +61,8 @@ function mockGitHub(user: GitHubUser) {
         login: user.login,
         name: user.name,
         email: user.email,
+        bio: user.bio ?? null,
+        created_at: user.createdAt ?? "2015-06-01T10:00:00Z",
         avatar_url: `https://avatars.githubusercontent.com/u/${user.id}`,
       }),
     ),
@@ -135,6 +139,8 @@ describe("sign in with GitHub", () => {
       login: "ada",
       name: "Ada Lovelace",
       email: null,
+      bio: "Writes programs for engines.",
+      createdAt: "2012-03-04T05:06:07Z",
       emails: [
         { email: "old@example.com", primary: false, verified: true },
         { email: "ada@example.com", primary: true, verified: true },
@@ -155,7 +161,16 @@ describe("sign in with GitHub", () => {
     });
 
     const [user] = await database.db.select().from(users);
-    expect(user?.githubId).toBe(4_000_000_001);
+    expect(user).toMatchObject({
+      githubId: 4_000_000_001,
+      bio: "Writes programs for engines.",
+      githubCreatedAt: new Date("2012-03-04T05:06:07Z"),
+      // Phase 2 settings start with their defaults.
+      profilePublic: true,
+      streakPeriod: "week",
+      streakReminders: false,
+      goalEmails: false,
+    });
     const channels = await database.db.select().from(notificationChannels);
     expect(channels).toMatchObject([{ status: "active", config: { address: "ada@example.com" } }]);
     expect(mailer.sent.map((email) => email.subject)).toEqual(["Welcome to Open Source Guru"]);

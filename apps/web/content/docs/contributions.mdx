@@ -1,0 +1,83 @@
+---
+title: Open Source Contributions
+description: What counts, why your total is lower than on GitHub, and how it's kept up to date.
+---
+
+Your [Contributions](/dashboard/contributions) page shows your **Open Source Contributions**: the
+work GitHub counts on your profile, limited to other people's open-source projects.
+
+## What counts
+
+We start from what GitHub itself counts as a
+[contribution](https://docs.github.com/en/account-and-profile/reference/profile-contributions-reference):
+
+| Type | Counted when |
+|---|---|
+| Commits | On the default branch (or `gh-pages`), with an email address linked to your GitHub account. Co-authored commits count too. |
+| Pull requests | You open one |
+| Reviews | You submit a pull request review |
+| Issues | You open one |
+| Discussions | You open one, or your answer is accepted |
+
+Like on GitHub, each one counts as 1: a day with 4 commits is 4 contributions.
+
+Then we keep only the ones made in a repository that is:
+
+1. **Public.** Private repositories aren't open source.
+2. **Not a fork.**
+3. **Not owned by your own account.** Contributing means working on someone else's project.
+   Repositories of **organizations count**, even if you're a member or an admin: maintaining
+   `freeCodeCamp/freeCodeCamp` is real open-source work.
+4. **Under an [OSI-approved](https://opensource.org/licenses) license**, as detected by GitHub
+   (MIT, Apache-2.0, GPL-3.0, MPL-2.0, BSD-3-Clause, …). A public repository without a license
+   is "all rights reserved", not open source.
+
+<Callout title="Some licenses don't count">
+  Licenses that aren't OSI-approved, such as **CC0-1.0** and other Creative Commons licenses,
+  don't count, and neither do licenses GitHub can't identify (shown as "Other" on GitHub).
+</Callout>
+
+## Why your total is lower than on GitHub
+
+GitHub's graph also counts contributions to private repositories, to your own projects, and to
+repositories without an open-source license. We don't, so your total here is usually lower.
+
+The **Not counted** section at the bottom of your Contributions page lists what was left out and
+why: "120 contributions in your own repositories", "42 contributions in repositories without a
+license", and so on. Only you can see it.
+
+GitHub only tells us how many private contributions you made, never where: we don't store
+anything else about them.
+
+## Which day a contribution counts for
+
+Contributions fall on the same day as on GitHub's graph:
+
+- **Commits** count on the date of the commit itself, in the time zone it was made in.
+- **Everything else** counts on its date in UTC.
+
+Weeks run Sunday to Saturday, as on GitHub.
+
+## How it's kept up to date
+
+- **When you sign up**, we fetch every year since your GitHub account was created, newest first.
+  It takes a minute or two; older years follow in the background.
+- **The current year** is refreshed every 6 hours, and when you open your dashboard if the last
+  refresh is more than 15 minutes old.
+- **Past years** are refreshed once a month, to pick up late changes.
+- **Repositories are re-checked every week.** If one changes its license, becomes private or is
+  transferred to a new owner, your counts are updated: contributions to a project you
+  transferred to an organization start counting.
+
+Contributions that disappear from GitHub (a deleted issue, rewritten history) disappear here at
+the next refresh.
+
+## The Contributions page
+
+- **The graph**: one square per day, darker for busier days. Hover a square for its count, or use
+  "Show as a table".
+- **The year picker**: the last 12 months (the default) or any year since your GitHub account
+  was created. The year is in the address (`?year=2025`), so you can share a link to it.
+- **Your [streak](/docs/streaks)**, a breakdown by type and by repository (with its license), and
+  your recently merged pull requests.
+- **Not counted**: what was left out, and why.

@@ -66,6 +66,9 @@ export function createAuth(config: AuthConfig) {
         mapProfileToUser: (profile) => ({
           githubId: Number(profile.id),
           login: profile.login,
+          bio: profile.bio || null,
+          // The first year of the contribution graph's year selector (PLAN.md §4.3).
+          githubCreatedAt: profile.created_at ? new Date(profile.created_at) : null,
         }),
       },
     },
@@ -81,6 +84,12 @@ export function createAuth(config: AuthConfig) {
         login: { type: "string", required: true, input: true },
         timezone: { type: "string", required: true, defaultValue: "UTC", input: false },
         digestHour: { type: "number", required: true, defaultValue: 8, input: false },
+        bio: { type: "string", required: false, input: true },
+        githubCreatedAt: { type: "date", required: false, input: true },
+        profilePublic: { type: "boolean", required: true, defaultValue: true, input: false },
+        streakPeriod: { type: "string", required: true, defaultValue: "week", input: false },
+        streakReminders: { type: "boolean", required: true, defaultValue: false, input: false },
+        goalEmails: { type: "boolean", required: true, defaultValue: false, input: false },
       },
     },
     account: {
