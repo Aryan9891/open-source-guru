@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { addDays, dateInTimeZone, daysBetween, weekStart } from "./dates.ts";
+import {
+  addDays,
+  dateInTimeZone,
+  daysBetween,
+  githubContributionDate,
+  weekStart,
+} from "./dates.ts";
 
 describe("dates", () => {
   it("gives the calendar date of an instant in a time zone", () => {
@@ -32,5 +38,14 @@ describe("dates", () => {
     expect(weekStart("2026-10-18")).toBe("2026-10-18");
     // Across a year boundary: 2026-12-27 is a Sunday.
     expect(weekStart("2027-01-01")).toBe("2026-12-27");
+  });
+
+  it("dates contributions like GitHub's graph", () => {
+    // Commit days come as midnight Pacific time: 07:00Z in summer, 08:00Z in winter.
+    expect(githubContributionDate("commit", new Date("2026-09-14T07:00:00Z"))).toBe("2026-09-14");
+    expect(githubContributionDate("commit", new Date("2026-12-14T08:00:00Z"))).toBe("2026-12-14");
+    // Everything else uses the UTC date.
+    expect(githubContributionDate("other", new Date("2026-09-14T23:30:00Z"))).toBe("2026-09-14");
+    expect(githubContributionDate("other", new Date("2026-09-15T00:30:00Z"))).toBe("2026-09-15");
   });
 });

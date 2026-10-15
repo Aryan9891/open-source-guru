@@ -1224,6 +1224,43 @@
         }
       }
     },
+    "/v1/me/sync": {
+      "post": {
+        "summary": "Refresh your contributions from GitHub",
+        "tags": [
+          "Contributions"
+        ],
+        "description": "Asks for this year's contributions to be fetched again, within a minute or so. Ignored when the last refresh is less than 15 minutes old or one is already on its way.",
+        "responses": {
+          "202": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "requested": {
+                      "type": "boolean",
+                      "description": "False when a recent or pending sync makes it unnecessary"
+                    },
+                    "lastSyncedAt": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "requested",
+                    "lastSyncedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/me/api-keys": {
       "get": {
         "summary": "Your personal API keys",
@@ -1566,6 +1603,10 @@
     {
       "name": "Feed",
       "description": "Issues that matched your subscriptions."
+    },
+    {
+      "name": "Contributions",
+      "description": "Your Open Source Contributions, synced from GitHub."
     },
     {
       "name": "API keys",

@@ -33,3 +33,13 @@ export function daysBetween(from: IsoDate, to: IsoDate): number {
 export function weekStart(date: IsoDate): IsoDate {
   return addDays(date, -new Date(toUtc(date)).getUTCDay());
 }
+
+/**
+ * The day GitHub's contribution graph shows a contribution on. Measured against the graph:
+ * - Commits: GitHub reports each commit day (the commit's own local date) as midnight Pacific
+ *   time, so the date is read in `America/Los_Angeles`.
+ * - Everything else: the UTC date ("contributions are timestamped according to UTC").
+ */
+export function githubContributionDate(kind: "commit" | "other", occurredAt: Date): IsoDate {
+  return dateInTimeZone(occurredAt, kind === "commit" ? "America/Los_Angeles" : "UTC");
+}

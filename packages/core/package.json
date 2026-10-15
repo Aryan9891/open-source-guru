@@ -20,7 +20,8 @@
     "./contributions/classify": "./src/contributions/classify.ts",
     "./contributions/dates": "./src/contributions/dates.ts",
     "./contributions/licenses": "./src/contributions/licenses.ts",
-    "./contributions/streaks": "./src/contributions/streaks.ts"
+    "./contributions/streaks": "./src/contributions/streaks.ts",
+    "./github/contributions": "./src/github/contributions.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

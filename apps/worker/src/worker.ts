@@ -1,17 +1,21 @@
 import { readFileSync } from "node:fs";
 import { createDatabase } from "@osg/core/db";
 import { createGitHubApi, createInstallationOctokit } from "@osg/core/github";
+import { createGitHubContributionsApi } from "@osg/core/github/contributions";
 import { createEmailLinks } from "@osg/core/links";
 import { createSmtpSender } from "@osg/core/mail";
 import { PgBoss } from "pg-boss";
 import { pino } from "pino";
 import type { WorkerContext } from "./context.ts";
 import { loadWorkerEnv } from "./env.ts";
+import { reclassifyRepositories } from "./jobs/classify-repos.ts";
 import { cleanup } from "./jobs/cleanup.ts";
 import { fanOutEvents } from "./jobs/fanout.ts";
 import { pollRepository } from "./jobs/poll-repo.ts";
+import { findContributionSyncsDue } from "./jobs/schedule-contribution-syncs.ts";
 import { findRepositoriesDue } from "./jobs/schedule-polls.ts";
 import { sendDueNotifications } from "./jobs/send-notifications.ts";
+import { syncContributionYear } from "./jobs/sync-contributions.ts";
 
 const env = loadWorkerEnv();
 
@@ -34,6 +38,8 @@ const octokit = createInstallationOctokit(
 const ctx: WorkerContext = {
   db: database.db,
   github: createGitHubApi(octokit),
+  // Contributions are public data: the installation token sees every one that can count.
+  contributions: createGitHubContributionsApi(octokit),
   mailer,
   links: createEmailLinks({ webUrl: env.WEB_URL, secret: env.EMAIL_TOKEN_SECRET }),
   log: logger,
@@ -51,6 +57,9 @@ const Queue = {
   sendInstant: "send-instant",
   sendDigests: "send-digests",
   cleanup: "cleanup",
+  scheduleContributionSyncs: "schedule-contribution-syncs",
+  syncContributions: "sync-contributions",
+  classifyRepos: "classify-repos",
 } as const;
 
 // Scheduled jobs: never more than one queued or running at a time.
@@ -60,17 +69,24 @@ for (const name of [
   Queue.sendInstant,
   Queue.sendDigests,
   Queue.cleanup,
+  Queue.scheduleContributionSyncs,
+  Queue.classifyRepos,
 ]) {
   await boss.createQueue(name, { policy: "exclusive" });
 }
 // One poll per repository at a time (singletonKey = repository ID).
 await boss.createQueue(Queue.pollRepo, { policy: "stately", retryLimit: 2, retryBackoff: true });
+// One sync per user and year at a time (singletonKey = `${userId}:${year}`). Failures are
+// retried by the scheduler, from `contribution_syncs`.
+await boss.createQueue(Queue.syncContributions, { policy: "stately" });
 
 await boss.schedule(Queue.schedulePolls, "* * * * *");
 await boss.schedule(Queue.fanout, "* * * * *");
 await boss.schedule(Queue.sendInstant, "* * * * *");
 await boss.schedule(Queue.sendDigests, "5 * * * *");
 await boss.schedule(Queue.cleanup, "30 3 * * *");
+await boss.schedule(Queue.scheduleContributionSyncs, "* * * * *");
+await boss.schedule(Queue.classifyRepos, "15 4 * * *");
 
 await boss.work(Queue.schedulePolls, async () => {
   const repoIds = await findRepositoriesDue(ctx);
@@ -110,6 +126,29 @@ await boss.work(Queue.sendDigests, async () => {
     const result = await sendDueNotifications(ctx, frequency);
     if (result.emails + result.failed > 0) logger.info({ frequency, ...result }, "digests sent");
   }
+});
+
+await boss.work(Queue.scheduleContributionSyncs, async () => {
+  const due = await findContributionSyncsDue(ctx);
+  for (const { userId, year } of due) {
+    await boss.send(
+      Queue.syncContributions,
+      { userId, year },
+      { singletonKey: `${userId}:${year}` },
+    );
+  }
+  if (due.length > 0) logger.debug({ count: due.length }, "contribution syncs queued");
+});
+
+await boss.work<{ userId: string; year: number }>(Queue.syncContributions, async ([job]) => {
+  if (!job) return;
+  const result = await syncContributionYear(ctx, job.data.userId, job.data.year);
+  if (result.outcome === "synced") logger.info({ ...job.data, ...result }, "contributions synced");
+});
+
+await boss.work(Queue.classifyRepos, async () => {
+  const result = await reclassifyRepositories(ctx);
+  if (result.checked > 0) logger.info(result, "repositories reclassified");
 });
 
 await boss.work(Queue.cleanup, async () => {

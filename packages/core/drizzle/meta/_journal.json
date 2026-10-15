@@ -15,6 +15,13 @@
       "when": 1792036413460,
       "tag": "0001_contributions",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792037237599,
+      "tag": "0002_contribution_sync_attempts",
+      "breakpoints": true
     }
   ]
 }

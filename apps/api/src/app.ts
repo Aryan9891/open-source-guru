@@ -17,6 +17,7 @@ import { ApiError } from "./errors.ts";
 import { betterAuthRoutes } from "./plugins/better-auth.ts";
 import { apiKeyRoutes } from "./routes/api-keys.ts";
 import { channelRoutes } from "./routes/channels.ts";
+import { contributionRoutes } from "./routes/contributions.ts";
 import { feedRoutes } from "./routes/feed.ts";
 import { meRoutes } from "./routes/me.ts";
 import { publicRoutes } from "./routes/public.ts";
@@ -38,6 +39,10 @@ const openApiTags = [
   { name: "Subscriptions", description: "Repositories and labels you follow." },
   { name: "Channels", description: "Email addresses notifications are sent to." },
   { name: "Feed", description: "Issues that matched your subscriptions." },
+  {
+    name: "Contributions",
+    description: "Your Open Source Contributions, synced from GitHub.",
+  },
   {
     name: "API keys",
     "x-displayName": "API keys",
@@ -141,6 +146,7 @@ export async function buildApp(deps: AppDependencies, options: FastifyServerOpti
   await app.register(subscriptionRoutes(deps));
   await app.register(channelRoutes(deps));
   await app.register(feedRoutes(deps));
+  await app.register(contributionRoutes(deps));
   await app.register(apiKeyRoutes(deps));
   await app.register(publicRoutes(deps));
 

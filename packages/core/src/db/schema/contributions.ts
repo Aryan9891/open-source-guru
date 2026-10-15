@@ -106,7 +106,11 @@ export const contributionSyncs = pgTable(
     year: integer().notNull(),
     status: text().$type<ContributionSyncStatus>().default("pending").notNull(),
     lastSyncedAt: timestamp({ withTimezone: true }),
+    /** When a sync last started: retries and stuck syncs are scheduled from it. */
+    lastAttemptAt: timestamp({ withTimezone: true }),
     lastError: text(),
+    /** Contributions in private repositories GitHub reports only as a number. */
+    restrictedCount: integer().default(0).notNull(),
   },
   (table) => [primaryKey({ columns: [table.userId, table.year] })],
 );
