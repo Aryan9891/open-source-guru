@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { BadgeSnippet } from "@/components/account/BadgeSnippet";
 import { ProfileVisibility } from "@/components/account/ProfileVisibility";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { apiFetch } from "@/lib/api-client";
@@ -40,6 +41,12 @@ export function ProfileSettings() {
       <p role="alert" className="text-sm text-danger empty:hidden">
         {error ?? ""}
       </p>
+      {/* The badge needs the public profile. */}
+      {user.profilePublic && (
+        <div className="mt-2 border-t border-border pt-5">
+          <BadgeSnippet login={user.login} />
+        </div>
+      )}
     </div>
   );
 }

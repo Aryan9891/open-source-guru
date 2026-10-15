@@ -1,3 +1,5 @@
+import { weekStart } from "@osg/core/contributions/dates";
+import { contributionDays, userStreaks } from "@osg/core/db/schema";
 import { describe, expect, it } from "vitest";
 import { seedContributions } from "./testing/contributions.ts";
 import { createTestApi, useTestDatabase } from "./testing/setup.ts";
@@ -60,5 +62,43 @@ describe("public profiles", () => {
     expect(
       (await app.inject({ method: "GET", url: "/v1/public/profiles/nobody" })).statusCode,
     ).toBe(404);
+  });
+});
+
+describe("README badge", () => {
+  it("shows the last 12 months and the current streak, cached for an hour", async () => {
+    const { app, signUp } = await createTestApi(database());
+    const { user } = await signUp("ada");
+    const today = new Date().toISOString().slice(0, 10);
+    await database()
+      .db.insert(contributionDays)
+      .values({ userId: user.id, date: today, count: 42 });
+    await database()
+      .db.insert(userStreaks)
+      .values({
+        userId: user.id,
+        period: "week",
+        currentLength: 3,
+        longestLength: 3,
+        lastCountedPeriod: weekStart(today),
+      });
+
+    const badge = await app.inject({ method: "GET", url: "/v1/public/profiles/ada/badge.svg" });
+
+    expect(badge.statusCode).toBe(200);
+    expect(badge.headers["content-type"]).toBe("image/svg+xml; charset=utf-8");
+    expect(badge.headers["cache-control"]).toBe("public, max-age=3600");
+    expect(badge.headers["cross-origin-resource-policy"]).toBe("cross-origin");
+    expect(badge.body).toContain(
+      "<title>Open Source Guru: 42 contributions · 3-week streak</title>",
+    );
+  });
+
+  it("is a grey 'not available' badge for unknown or private profiles", async () => {
+    const { app } = await createTestApi(database());
+    const badge = await app.inject({ method: "GET", url: "/v1/public/profiles/nobody/badge.svg" });
+    expect(badge.statusCode).toBe(404);
+    expect(badge.headers["content-type"]).toBe("image/svg+xml; charset=utf-8");
+    expect(badge.body).toContain("not available");
   });
 });

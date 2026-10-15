@@ -3270,6 +3270,32 @@
           }
         }
       }
+    },
+    "/v1/public/profiles/{login}/badge.svg": {
+      "get": {
+        "summary": "README badge",
+        "tags": [
+          "Public"
+        ],
+        "description": "An SVG badge with the Open Source Contributions of the last 12 months and the current streak. Cached for an hour. A grey \"not available\" badge (404) when the profile doesn't exist or is off.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9-]{1,39}$"
+            },
+            "in": "path",
+            "name": "login",
+            "required": true
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
     }
   },
   "security": [

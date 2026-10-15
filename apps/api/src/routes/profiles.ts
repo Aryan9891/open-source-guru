@@ -1,11 +1,32 @@
-import { and, asc, desc, eq, inArray, sql } from "@osg/core/db/query";
-import { goalPeriods, goals, repositories, users } from "@osg/core/db/schema";
+import { currentStreakAsOf } from "@osg/core/contributions/streaks";
+import { and, asc, desc, eq, inArray, sql, sum } from "@osg/core/db/query";
+import {
+  contributionDays,
+  goalPeriods,
+  goals,
+  repositories,
+  userStreaks,
+  users,
+} from "@osg/core/db/schema";
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 import type { ApiContext } from "../context.ts";
 import { notFound } from "../errors.ts";
-import { periodQuery } from "../services/contributions.ts";
+import { badgeMessage, renderBadge } from "../services/badge.ts";
+import { daysIn, githubToday, periodFor, periodQuery } from "../services/contributions.ts";
 import { computeStats, statsResponse } from "../services/stats.ts";
+
+/** Badges are cached for an hour (GitHub's image proxy caches them too). */
+const BADGE_CACHE = "public, max-age=3600";
+const BADGE_LABEL = "Open Source Guru";
+const loginParams = z.object({ login: z.string().regex(/^[A-Za-z0-9-]{1,39}$/) });
+
+const findPublicUser = async (ctx: ApiContext, login: string) => {
+  const user = await ctx.db.query.users.findFirst({
+    where: eq(sql`lower(${users.login})`, login.toLowerCase()),
+  });
+  return user?.profilePublic ? user : null;
+};
 
 const publicGoal = z.object({
   id: z.string(),
@@ -41,7 +62,7 @@ export const profileRoutes =
           summary: "A public profile",
           description:
             "Open Source Contributions, streaks and public goals of a user. 404 when the user doesn't exist or turned their profile off.",
-          params: z.object({ login: z.string().regex(/^[A-Za-z0-9-]{1,39}$/) }),
+          params: loginParams,
           querystring: periodQuery,
           response: {
             200: z.object({
@@ -57,10 +78,8 @@ export const profileRoutes =
         },
       },
       async (request, reply) => {
-        const user = await ctx.db.query.users.findFirst({
-          where: eq(sql`lower(${users.login})`, request.params.login.toLowerCase()),
-        });
-        if (!user?.profilePublic) throw notFound("Profile");
+        const user = await findPublicUser(ctx, request.params.login);
+        if (!user) throw notFound("Profile");
 
         const [stats, rows] = await Promise.all([
           computeStats(ctx, user, request.query.year),
@@ -119,6 +138,51 @@ export const profileRoutes =
             };
           }),
         };
+      },
+    );
+
+    app.get(
+      "/v1/public/profiles/:login/badge.svg",
+      {
+        schema: {
+          tags: ["Public"],
+          security: [],
+          summary: "README badge",
+          description:
+            'An SVG badge with the Open Source Contributions of the last 12 months and the current streak. Cached for an hour. A grey "not available" badge (404) when the profile doesn\'t exist or is off.',
+          params: loginParams,
+        },
+      },
+      async (request, reply) => {
+        reply
+          .type("image/svg+xml; charset=utf-8")
+          .header("cache-control", BADGE_CACHE)
+          // Embedded on other sites (READMEs, blogs): allow cross-origin loading.
+          .header("cross-origin-resource-policy", "cross-origin");
+        const user = await findPublicUser(ctx, request.params.login);
+        if (!user) {
+          // An image, not JSON: READMEs show it instead of a broken image.
+          return reply.code(404).send(renderBadge(BADGE_LABEL, "not available", true));
+        }
+
+        const period = periodFor(ctx, undefined);
+        const [[days], [stored]] = await Promise.all([
+          ctx.db
+            .select({ total: sum(contributionDays.count).mapWith(Number) })
+            .from(contributionDays)
+            .where(daysIn(user.id, period)),
+          ctx.db
+            .select()
+            .from(userStreaks)
+            .where(and(eq(userStreaks.userId, user.id), eq(userStreaks.period, user.streakPeriod))),
+        ]);
+        const streak = stored
+          ? currentStreakAsOf(stored, user.streakPeriod, githubToday(ctx)).currentLength
+          : 0;
+        return renderBadge(
+          BADGE_LABEL,
+          badgeMessage(days?.total ?? 0, { length: streak, period: user.streakPeriod }),
+        );
       },
     );
   };

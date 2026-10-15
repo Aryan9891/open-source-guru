@@ -10,6 +10,7 @@ import { buttonClasses } from "@/components/ui/Button";
 import { ROUTES } from "@/lib/constants";
 import { contributionsText, parseYear } from "@/lib/contributions";
 import { fetchProfile } from "@/lib/profile";
+import { OwnerBadge } from "./_components/OwnerBadge";
 import { PublicGoals } from "./_components/PublicGoals";
 
 type Props = PageProps<"/u/[login]">;
@@ -102,6 +103,8 @@ async function Profile({ params, searchParams }: Props) {
       <StreakSummary streaks={stats.streaks} owner={false} />
       {profile.goals.length > 0 && <PublicGoals goals={profile.goals} />}
       <Breakdown stats={stats} />
+
+      <OwnerBadge login={profile.login} />
 
       <aside className="flex flex-wrap items-center justify-between gap-4 rounded-lg bg-surface-muted p-5">
         <p className="text-subtle">
