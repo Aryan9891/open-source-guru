@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { DeleteAccount } from "./_components/DeleteAccount";
 import { DeliverySettings } from "./_components/DeliverySettings";
 import { EmailAddresses } from "./_components/EmailAddresses";
+import { StreakSettings } from "./_components/StreakSettings";
 
 export const metadata: Metadata = { title: "Settings" };
 
@@ -37,7 +38,7 @@ export default function SettingsPage() {
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-1">
         <h1 className="font-display text-3xl font-extrabold tracking-tight">Settings</h1>
-        <p className="text-subtle">Where and when we email you, and your account.</p>
+        <p className="text-subtle">Where and when we email you, streaks, and your account.</p>
       </header>
       <Section title="Email delivery" description="Used for daily digests.">
         <DeliverySettings />
@@ -47,6 +48,12 @@ export default function SettingsPage() {
         description="Your GitHub primary email is added when you sign up. Add others to send some subscriptions elsewhere."
       >
         <EmailAddresses />
+      </Section>
+      <Section
+        title="Streaks"
+        description="Count your streak in weeks or days with at least one Open Source Contribution."
+      >
+        <StreakSettings />
       </Section>
       <Section title="Delete account" description="Permanently remove your data." danger>
         <DeleteAccount />

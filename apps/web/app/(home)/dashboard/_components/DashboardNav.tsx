@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { apiFetch } from "@/lib/api-client";
 import { ROUTES } from "@/lib/constants";
 import { SignOutButton } from "./SignOutButton";
 
 const items = [
   { href: ROUTES.dashboard.feed, label: "Feed" },
+  { href: ROUTES.dashboard.contributions, label: "Contributions" },
   { href: ROUTES.dashboard.subscriptions, label: "Subscriptions" },
   { href: ROUTES.dashboard.settings, label: "Settings" },
   { href: ROUTES.dashboard.apiKeys, label: "API keys" },
@@ -23,6 +26,12 @@ export function DashboardNav({
   image: string | null;
 }) {
   const pathname = usePathname();
+
+  // Opening the dashboard refreshes contributions from GitHub when the last sync is over 15
+  // minutes old (the API decides). The nav lives in the layout, so this runs once per visit.
+  useEffect(() => {
+    apiFetch("/v1/me/sync", { method: "POST" }).catch(() => {});
+  }, []);
 
   return (
     <aside className="flex w-full flex-col gap-6 md:w-56 md:flex-[1_1_14rem]">

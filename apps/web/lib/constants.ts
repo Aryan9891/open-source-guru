@@ -7,6 +7,7 @@ export const ROUTES = {
   /** Pages behind sign-in. */
   dashboard: {
     feed: "/dashboard",
+    contributions: "/dashboard/contributions",
     subscriptions: "/dashboard/subscriptions",
     settings: "/dashboard/settings",
     apiKeys: "/dashboard/api-keys",

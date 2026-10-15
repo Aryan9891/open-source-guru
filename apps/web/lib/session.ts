@@ -9,6 +9,7 @@ export interface CurrentUser {
   image: string | null;
   timezone: string;
   digestHour: number;
+  streakPeriod: "week" | "day";
 }
 
 const apiInternalUrl = process.env.API_INTERNAL_URL ?? "http://localhost:4000";
