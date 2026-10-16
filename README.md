@@ -1,3 +1,16 @@
+<p align="center">
+  <a href="https://open-source-guru.dev">
+    <img src=".github/assets/banner.png" alt="Open Source Guru: find issues to work on, the moment they're labeled" width="100%">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/tem-ctrl/open-source-guru/stargazers"><img src="https://img.shields.io/github/stars/tem-ctrl/open-source-guru?style=flat&color=8F1383" alt="GitHub stars"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-45056E" alt="MIT License"></a>
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-E47676" alt="PRs welcome"></a>
+  <a href="https://discord.gg/PfVvJymRK"><img src="https://img.shields.io/badge/chat-Discord-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+</p>
+
 # Open Source Guru
 
 Get email alerts when issues in open-source repos you follow are opened with, or given, labels like
