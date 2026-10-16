@@ -21,6 +21,9 @@ x-backend: &backend
   environment:
     DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}
     WEB_URL: https://${DOMAIN}
+    # Inside the container the API always listens on 4000 (healthcheck, API_INTERNAL_URL).
+    # API_PORT in .env is the host port published for nginx, so it must not leak in here.
+    API_PORT: "4000"
     GITHUB_APP_PRIVATE_KEY_PATH: /run/secrets/github_app_key
   secrets:
     - github_app_key
