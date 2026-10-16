@@ -49,3 +49,14 @@ type parameter of Next.js's typed routes, e.g. `PageProps<"/sign-in">`.
 
 [Conventional Commits](https://www.conventionalcommits.org), checked by commitlint. See the
 README's "Commit messages" section for types and scopes.
+
+## Related changes
+
+Some changes need other files updated in the same pull request:
+
+- **Database schema:** generate a migration with `pnpm db:generate` and commit it. Never edit
+  existing migrations.
+- **API:** regenerate `apps/web/openapi.json` with `pnpm --filter @osg/api openapi`.
+- **New environment variable:** add it to `.env.example` (and `.env.production.example`) and
+  validate it in the app's `env.ts`.
+- **User-facing behavior:** update the docs in `apps/web/content/docs/`.
