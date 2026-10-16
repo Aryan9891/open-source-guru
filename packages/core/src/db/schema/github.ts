@@ -1,4 +1,4 @@
-// Mirror of the GitHub data we poll, shared by all users (PLAN.md §8.3).
+// Mirror of the GitHub data we poll, shared by all users.
 import { sql } from "drizzle-orm";
 import {
   bigint,
@@ -44,7 +44,7 @@ export const repositories = pgTable(
     owner: text().notNull(),
     name: text().notNull(),
     status: text().$type<RepositoryStatus>().default("active").notNull(),
-    // Polling state (PLAN.md §2)
+    // Polling state
     etag: text(),
     /** `since` sent to GitHub on the next poll. */
     cursorSince: timestamp({ withTimezone: true }),
@@ -57,7 +57,7 @@ export const repositories = pgTable(
     pollIntervalSeconds: integer().default(120).notNull(),
     lastPolledAt: timestamp({ withTimezone: true }),
     lastPollError: text(),
-    // Classification for Open Source Contributions (PLAN.md §4.1); null until classified.
+    // Classification for Open Source Contributions; null until classified.
     ownerGithubId: bigint({ mode: "number" }),
     isPrivate: boolean(),
     isFork: boolean(),

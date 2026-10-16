@@ -47,7 +47,7 @@ const publicGoal = z.object({
 });
 
 /**
- * Public profiles (PLAN.md §4.6): only data GitHub already shows publicly, never emails,
+ * Public profiles: only data GitHub already shows publicly, never emails,
  * subscriptions or what wasn't counted. Not cached, so turning a profile off is immediate.
  */
 export const profileRoutes =

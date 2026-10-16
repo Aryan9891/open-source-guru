@@ -1,4 +1,4 @@
-// Drizzle table definitions, grouped as in PLAN.md §8.
+// Drizzle table definitions.
 export * from "./auth.ts";
 export * from "./contributions.ts";
 export * from "./github.ts";

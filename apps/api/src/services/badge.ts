@@ -1,4 +1,4 @@
-// README badge (PLAN.md §4.6): a two-part SVG in the style of shields.io, in brand colors.
+// README badge: a two-part SVG in the style of shields.io, in brand colors.
 
 const LABEL_COLOR = "#1F024C"; // Midnight Plum
 const MESSAGE_COLOR = "#8F1383"; // Orchid

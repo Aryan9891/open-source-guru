@@ -1,4 +1,4 @@
-// Opt-in motivation emails (PLAN.md §4.4–4.5): streak reminders and goals achieved.
+// Opt-in motivation emails: streak reminders and goals achieved.
 import { addDays, dateInTimeZone, daysBetween, weekStart } from "@osg/core/contributions/dates";
 import type { AchievedPeriod } from "@osg/core/contributions/goal-progress";
 import { describeGoal, describePeriod } from "@osg/core/contributions/goals";

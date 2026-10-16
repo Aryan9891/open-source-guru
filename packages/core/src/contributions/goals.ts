@@ -69,7 +69,7 @@ const KIND_OF: Partial<Record<GoalMetric, ContributionKind>> = {
 };
 
 /**
- * Progress of a metric over a period (PLAN.md §4.5). Commits count each commit; merged pull
+ * Progress of a metric over a period. Commits count each commit; merged pull
  * requests count by merge date (they're opened earlier, possibly in another period).
  */
 export function measure(metric: GoalMetric, items: GoalContribution[], period: GoalPeriod): number {

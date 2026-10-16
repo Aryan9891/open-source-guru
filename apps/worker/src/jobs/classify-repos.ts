@@ -5,7 +5,7 @@ import type { WorkerContext } from "../context.ts";
 import { rebuildContributionDays, upsertRepositories } from "./contribution-store.ts";
 import { recomputeProgress } from "./recompute-progress.ts";
 
-/** Repositories are re-checked weekly (PLAN.md §4.1). */
+/** Repositories are re-checked weekly. */
 export const RECLASSIFY_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
 
 /**

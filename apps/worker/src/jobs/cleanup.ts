@@ -6,7 +6,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 /** How long sent, skipped and failed deliveries (and their events) are kept. */
 export const RETENTION_DAYS = 90;
 
-/** Daily housekeeping (PLAN.md §10). */
+/** Daily housekeeping. */
 export async function cleanup(ctx: WorkerContext) {
   const now = ctx.now();
   const cutoff = new Date(now.getTime() - RETENTION_DAYS * DAY_MS);

@@ -4,7 +4,7 @@ import type { WorkerContext } from "../context.ts";
 
 const HOUR_MS = 60 * 60 * 1000;
 
-/** How often each year is refreshed once synced (PLAN.md §4.2). */
+/** How often each year is refreshed once synced. */
 export const REFRESH_CURRENT_YEAR_MS = 6 * HOUR_MS;
 export const REFRESH_PAST_YEAR_MS = 30 * 24 * HOUR_MS;
 /** A failed sync is retried after this long; a running one is considered stuck after it. */

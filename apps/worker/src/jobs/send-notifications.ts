@@ -16,7 +16,7 @@ import { isDailyDigestDue } from "@osg/core/notifications/schedule";
 import { renderNotificationEmail } from "@osg/emails";
 import type { WorkerContext } from "../context.ts";
 
-/** "Instant" emails wait this long so that several matches arrive in one email (PLAN.md §10). */
+/** "Instant" emails wait this long so that several matches arrive in one email. */
 export const INSTANT_BATCH_WINDOW_MS = 5 * 60 * 1000;
 
 /** Retry delays after a temporary failure; the delivery fails after the last one. */

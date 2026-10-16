@@ -9,7 +9,7 @@ export interface Period {
 }
 
 /**
- * The period the contribution graph shows (PLAN.md §4.3): a calendar year, or by default the
+ * The period the contribution graph shows: a calendar year, or by default the
  * last 12 months as GitHub draws them, 53 weeks starting on a Sunday and ending today.
  */
 export function resolvePeriod(year: number | undefined, today: IsoDate): Period {

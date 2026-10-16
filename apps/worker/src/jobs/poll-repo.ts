@@ -22,7 +22,7 @@ export type PollResult =
   | { outcome: "updated"; issues: number; events: number }
   | { outcome: "not_found" };
 
-/** Polls one repository (PLAN.md §2) and records snapshots and events. */
+/** Polls one repository and records snapshots and events. */
 export async function pollRepository(ctx: WorkerContext, repoId: string): Promise<PollResult> {
   const { db, github } = ctx;
   const repo = await db.query.repositories.findFirst({ where: eq(repositories.id, repoId) });

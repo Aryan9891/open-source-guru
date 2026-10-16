@@ -12,7 +12,7 @@ export interface AchievedPeriod {
 
 /**
  * Recomputes the progress of a user's active goals (or some of them) over each of their periods,
- * from counted contributions (PLAN.md §4.5). A period reaching its target records `achieved_at`
+ * from counted contributions. A period reaching its target records `achieved_at`
  * once; it stays achieved even if a recount lowers the progress later. Returns the periods
  * achieved by this call, for congratulation emails.
  */

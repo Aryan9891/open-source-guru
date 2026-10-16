@@ -187,7 +187,7 @@ export interface GitHubAppCredentials {
 }
 
 /**
- * An Octokit client authenticated as our GitHub App installation (PLAN.md §2). Installation
+ * An Octokit client authenticated as our GitHub App installation. Installation
  * tokens are created and refreshed automatically. Rate limits are respected: requests wait
  * and retry once when GitHub asks to slow down.
  */

@@ -16,8 +16,8 @@ const periodStart = (date: IsoDate, period: StreakPeriod) =>
 const periodDays = (period: StreakPeriod) => (period === "week" ? 7 : 1);
 
 /**
- * Streaks of days or weeks (Sunday to Saturday) with at least one Open Source Contribution
- * (PLAN.md §4.4). `today` is the user's current date: the current day or week isn't counted as
+ * Streaks of days or weeks (Sunday to Saturday) with at least one Open Source Contribution.
+ * `today` is the user's current date: the current day or week isn't counted as
  * broken until it's over, so a streak that ended in the previous period is still current.
  */
 export function computeStreak(

@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   cacheComponents: true,
   partialPrefetching: true,
-  // Self-hosted with Docker (PLAN.md §14); trace files from the monorepo root.
+  // Self-hosted with Docker; trace files from the monorepo root.
   output: "standalone",
   outputFileTracingRoot: path.join(import.meta.dirname, "../.."),
   turbopack: {

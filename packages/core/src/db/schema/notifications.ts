@@ -1,4 +1,4 @@
-// Channels, subscriptions and deliveries (PLAN.md §8.2).
+// Channels, subscriptions and deliveries.
 import { sql } from "drizzle-orm";
 import {
   index,
