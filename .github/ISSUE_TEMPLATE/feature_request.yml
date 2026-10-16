@@ -1,0 +1,72 @@
+name: Feature request
+description: Suggest a new feature or an improvement to an existing one.
+title: "feat: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea! Please search the
+        [existing issues](https://github.com/tem-ctrl/open-source-guru/issues?q=is%3Aissue) first.
+        Some things are already planned: more channels (Discord, Slack, webhooks, ntfy) and more
+        events and filters (issues closed or assigned, pull requests, "unassigned only"). If your
+        idea is one of them, add your use case to the existing issue instead.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Subscriptions and matching
+        - Notification channels and emails
+        - Open Source Contributions
+        - Streaks, goals and progress emails
+        - Public profile or README badge
+        - Account and settings
+        - REST API
+        - Documentation
+        - Developer experience (setup, tooling, CI)
+        - Something new
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: |
+        What are you trying to do, and what gets in the way today? Describing the problem, not
+        only the solution, helps us find the best fit.
+      placeholder: I follow 30 repositories and the hourly digest mixes them all together, so...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What you'd like Open Source Guru to do. Mockups and example API calls are welcome.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches or workarounds you thought about.
+
+  - type: textarea
+    id: cost
+    attributes:
+      label: Impact on GitHub API usage
+      description: |
+        Open Source Guru polls GitHub and runs on a small budget, so features that need many more
+        API calls per repository or per user are hard to accept. If you have an idea of the cost,
+        tell us here. It's fine to leave this empty.
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contributing
+      options:
+        - label: I'd like to implement this myself (we'll agree on the approach in this issue first).

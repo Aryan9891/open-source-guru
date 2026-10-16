@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and help
+    url: https://discord.gg/PfVvJymRK
+    about: Ask how something works, or get help setting up your development environment, on Discord.
+  - name: User documentation
+    url: https://open-source-guru.dev/docs
+    about: Subscriptions, emails, contributions, streaks, goals, public profiles and the API.
+  - name: Report a security vulnerability
+    url: https://github.com/tem-ctrl/open-source-guru/security/advisories/new
+    about: Please report vulnerabilities privately, not in a public issue. See SECURITY.md.

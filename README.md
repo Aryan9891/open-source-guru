@@ -84,6 +84,17 @@ feat(api)!: rename /v1/me/feed to /v1/me/issues   ← breaking change
 - **Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 - **Scopes (optional):** `api`, `worker`, `web`, `docs`, `core`, `emails`, `db`, `deps`, `ci`, `config`, `release`
 
+## Contributing
+
+Contributions are welcome, from typo fixes to new features! Read the
+[contributing guide](CONTRIBUTING.md) to get started, and look for issues labeled
+[`good first issue`](https://github.com/tem-ctrl/open-source-guru/labels/good%20first%20issue).
+Everyone taking part is expected to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+- Questions and discussion: join our [Discord server](https://discord.gg/PfVvJymRK)
+- Bugs and ideas: [open an issue](https://github.com/tem-ctrl/open-source-guru/issues/new/choose)
+- Security vulnerabilities: report them privately, as described in [SECURITY.md](SECURITY.md)
+
 ## License
 
 [MIT](LICENSE)
