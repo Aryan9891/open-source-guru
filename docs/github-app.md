@@ -1,6 +1,6 @@
 # Registering the GitHub App
 
-open-source-guru uses **one GitHub App** for two things (see PLAN.md §2 and §3):
+open-source-guru uses **one GitHub App** for two things:
 
 - **Sign-in with GitHub**, using user access tokens.
 - **Polling public repositories**, using an installation access token.

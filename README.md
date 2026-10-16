@@ -30,29 +30,116 @@ packages/
 docs/        Contributor documentation (e.g. GitHub App setup, deployment)
 ```
 
-## Requirements
+## Local development
 
-- Node.js 24 or later
-- pnpm 12 (`corepack enable` picks the version from `package.json`)
-- Docker with Docker Compose (also used by the integration tests, through Testcontainers)
-- A GitHub App for development: see [docs/github-app.md](docs/github-app.md)
+Everything runs on your machine: emails are captured by Mailpit and never reach a real inbox.
 
-## Getting started
+### Prerequisites
+
+| Tool | Version | Check with |
+|---|---|---|
+| [Node.js](https://nodejs.org) | 24 or later | `node --version` |
+| pnpm | 12, installed by Corepack | `corepack enable && pnpm --version` |
+| [Docker](https://docs.docker.com/get-docker/) with Docker Compose | Any recent version | `docker compose version` |
+| A development GitHub App | See [docs/github-app.md](docs/github-app.md) | |
+
+Docker runs Postgres and Mailpit in development, and the integration tests use it too, through
+Testcontainers.
+
+### 1. Fork, clone and install
 
 ```bash
-pnpm install          # also installs the git hooks (lefthook)
-cp .env.example .env  # then fill in the secrets and the GitHub App values
-pnpm db:up            # Postgres on :5433, Mailpit on :1025 (SMTP) and :8025 (web UI)
-pnpm db:migrate
-pnpm dev              # api on :4000, worker, web on :3000
+git clone https://github.com/<your-username>/open-source-guru.git  # your fork
+cd open-source-guru
+corepack enable   # uses the pnpm version pinned in package.json
+pnpm install      # also installs the git hooks (lefthook)
 ```
 
-Generate `BETTER_AUTH_SECRET` and `EMAIL_TOKEN_SECRET` with `openssl rand -base64 32`, and put the
-GitHub App's private key in `secrets/` (git-ignored), referenced by its absolute path.
+### 2. Configure the environment
 
-- Web app: http://localhost:3000 (docs at `/docs`)
-- API: http://localhost:4000 (health at `/health`, OpenAPI docs at `/docs`)
-- Mailpit (captured emails): http://localhost:8025
+```bash
+cp .env.example .env
+```
+
+All apps read this one `.env` file at the repository root. Fill in these values and leave the
+others as they are. The `GITHUB_APP_*` values come from your development GitHub App
+([docs/github-app.md](docs/github-app.md)).
+
+| Variable | Value |
+|---|---|
+| `BETTER_AUTH_SECRET` | Output of `openssl rand -base64 32` |
+| `EMAIL_TOKEN_SECRET` | Output of `openssl rand -base64 32` (run it again: use a different value) |
+| `GITHUB_APP_ID` | The app's App ID |
+| `GITHUB_APP_CLIENT_ID` | The app's Client ID |
+| `GITHUB_APP_CLIENT_SECRET` | A client secret generated for the app |
+| `GITHUB_APP_PRIVATE_KEY_PATH` | **Absolute** path to the app's private key. Keep it in `secrets/` (git-ignored) and print the path with `echo "$PWD/secrets/github-app.private-key.pem"` |
+| `GITHUB_APP_INSTALLATION_ID` | The installation ID |
+
+The apps check their environment at startup and list every missing or invalid variable.
+
+### 3. Start the database and mail server
+
+```bash
+pnpm db:up        # Postgres on port 5433, Mailpit on 1025 (SMTP) and 8025 (web UI)
+pnpm db:migrate   # creates the tables
+```
+
+### 4. Run the apps
+
+```bash
+pnpm dev          # web app, API and worker in watch mode
+```
+
+| Service | URL |
+|---|---|
+| Web app | http://localhost:3000 |
+| User docs | http://localhost:3000/docs |
+| API | http://localhost:4000 (health check at `/health`, OpenAPI docs at `/docs`) |
+| Mailpit, where every email lands | http://localhost:8025 |
+
+### 5. Check that everything works
+
+1. Open http://localhost:3000, **sign in with GitHub**, and complete the onboarding.
+2. In **Subscriptions**, follow the `tem-ctrl/open-source-guru` repository with the label
+   `local testing`, and choose to get emails right away.
+3. Wait a couple of minutes for the worker's first check of the repository. That first check only
+   takes note of the existing issues, so nothing is sent.
+4. Open an issue with the
+   [Local testing template](https://github.com/tem-ctrl/open-source-guru/issues/new?template=local_testing.md).
+   It adds the `local testing` label for you.
+5. Within a few minutes, the notification email shows up in Mailpit. Then close the issue.
+
+If the email arrives, your setup is complete.
+
+### Running the tests
+
+```bash
+pnpm test                         # every package; Docker must be running
+pnpm --filter @osg/core test      # a single package
+```
+
+Integration tests (`*.integration.test.ts`) start a throwaway Postgres container, so they don't
+touch your development database.
+
+### Stopping and resetting
+
+```bash
+pnpm db:down                      # stops Postgres and Mailpit, keeps the data
+docker compose down -v            # stops them and deletes the database (then: pnpm db:up && pnpm db:migrate)
+```
+
+### Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `Invalid environment variables` at startup | The message lists the variables. Check `.env` is at the repository root and the secrets are at least 32 characters long. |
+| `ENOENT` for the private key | `GITHUB_APP_PRIVATE_KEY_PATH` must be an absolute path to an existing file. |
+| GitHub says *"The redirect_uri is not associated with this application"* | The app's callback URL must be exactly `http://localhost:3000/api/auth/callback/github`. |
+| Port 5433 is already in use | Change `POSTGRES_PORT` in `.env`, and the port in `DATABASE_URL` to match. |
+| No email in Mailpit | Check the worker's output in the `pnpm dev` terminal. The repository must be public, and only issues labeled after the first check are sent. |
+| `pnpm` not found, or the wrong version | Run `corepack enable`, then open a new terminal. |
+
+Still stuck? Ask on [Discord](https://discord.gg/PfVvJymRK).
 
 ## Scripts
 

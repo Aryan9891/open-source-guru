@@ -33,11 +33,9 @@ Have a question? Ask on [Discord](https://discord.gg/PfVvJymRK) rather than open
 
 ## Development setup
 
-You need Node.js 24+, pnpm (via `corepack enable`), Docker, and a GitHub App for development.
-Follow these, in order:
-
-1. [Register a development GitHub App](docs/github-app.md).
-2. Follow [Getting started](README.md#getting-started) in the README.
+Follow the [local development guide](README.md#local-development) in the README. It takes about 15
+minutes: you need Node.js 24+, pnpm (via `corepack enable`), Docker, and your own development
+GitHub App.
 
 Then, with `pnpm dev` running:
 
