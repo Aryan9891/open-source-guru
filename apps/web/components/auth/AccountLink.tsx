@@ -10,30 +10,35 @@ import { useAuth } from "./AuthProvider";
  * an empty placeholder of the same size keeps the layout from jumping.
  */
 export function AccountLink({ variant }: { variant: "button" | "link" }) {
-  const { state } = useAuth();
+  const {
+    state: { status },
+  } = useAuth();
 
-  if (state.status === "loading") {
+  if (status === "loading") {
     return (
       <span
-        aria-hidden="true"
-        className={variant === "button" ? "inline-block h-9 w-24" : "inline-block w-16"}
-      />
+        className={
+          variant === "button" ? buttonClasses({ className: "min-h-9 min-w-28 px-4" }) : "w-28"
+        }
+      >
+        Loading...
+      </span>
     );
   }
 
-  const signedIn = state.status === "signed-in";
+  const signedIn = status === "signed-in";
   const href = signedIn ? ROUTES.dashboard.feed : ROUTES.signIn;
   const text = signedIn ? "Dashboard" : "Sign in";
 
   if (variant === "link") {
     return (
-      <Link href={href} className="hover:text-foreground">
+      <Link href={href} className="hover:text-foreground min-w-28">
         {text}
       </Link>
     );
   }
   return (
-    <Link href={href} className={buttonClasses({ className: "min-h-9 px-4" })}>
+    <Link href={href} className={buttonClasses({ className: "min-h-9 px-4 min-w-28" })}>
       {text}
     </Link>
   );
