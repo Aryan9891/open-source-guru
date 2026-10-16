@@ -34,7 +34,7 @@ export interface DetectEventsInput {
 }
 
 /**
- * Compares an issue with its stored snapshot and returns the events to record (PLAN.md §2).
+ * Compares an issue with its stored snapshot and returns the events to record.
  *
  * - An issue we haven't seen, created after we started watching → `issue.opened`.
  *   Older unseen issues (reopened, transferred in) produce no event.

@@ -18,7 +18,7 @@ const dedupeKey = (item: FetchedContribution) =>
   item.nodeId ?? `commit:${item.repo.githubId}:${item.date}`;
 
 /**
- * Syncs one user's contributions for one calendar year (PLAN.md §4.2): fetches them from
+ * Syncs one user's contributions for one calendar year: fetches them from
  * GitHub, classifies them (§4.1), replaces what was stored for that year, and rebuilds the
  * daily totals. Idempotent; contributions that disappeared from GitHub are removed.
  */

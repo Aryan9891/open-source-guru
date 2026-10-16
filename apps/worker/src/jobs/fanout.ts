@@ -13,7 +13,7 @@ const BATCH_SIZE = 500;
 
 /**
  * Creates one delivery per (event, subscription, channel) for new events that match active
- * subscriptions (PLAN.md §10). Idempotent: a unique key prevents duplicate deliveries, and
+ * subscriptions. Idempotent: a unique key prevents duplicate deliveries, and
  * events are marked as fanned out in the same transaction.
  */
 export async function fanOutEvents(

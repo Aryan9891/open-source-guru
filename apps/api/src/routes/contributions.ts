@@ -16,7 +16,7 @@ import {
 } from "../services/contributions.ts";
 import { parseRepoReference } from "../services/repositories.ts";
 
-/** A sync can be requested again once the last one is this old (PLAN.md §4.2). */
+/** A sync can be requested again once the last one is this old. */
 export const SYNC_COOLDOWN_MS = 15 * 60 * 1000;
 
 /** Repositories listed by `/v1/me/contributions/excluded`. */

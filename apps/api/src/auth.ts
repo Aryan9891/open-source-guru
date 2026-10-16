@@ -55,7 +55,7 @@ export function createAuth(config: AuthConfig) {
     advanced: {
       database: { generateId: "uuid" },
     },
-    // GitHub is the only way to sign in (PLAN.md §3).
+    // GitHub is the only way to sign in.
     emailAndPassword: { enabled: false },
     socialProviders: {
       github: {
@@ -67,7 +67,7 @@ export function createAuth(config: AuthConfig) {
           githubId: Number(profile.id),
           login: profile.login,
           bio: profile.bio || null,
-          // The first year of the contribution graph's year selector (PLAN.md §4.3).
+          // The first year of the contribution graph's year selector.
           githubCreatedAt: profile.created_at ? new Date(profile.created_at) : null,
         }),
       },

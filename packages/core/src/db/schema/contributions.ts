@@ -1,4 +1,4 @@
-// Open Source Contributions, streaks and goals (PLAN.md §4, §8.4).
+// Open Source Contributions, streaks and goals.
 import {
   boolean,
   date,
@@ -16,7 +16,7 @@ import { repositories } from "./github.ts";
 
 export type ContributionKind = "commit" | "issue" | "pull_request" | "review" | "discussion";
 
-/** Why a contribution isn't an Open Source Contribution (PLAN.md §4.1). */
+/** Why a contribution isn't an Open Source Contribution. */
 export type ExcludedReason =
   | "private"
   | "fork"
@@ -59,7 +59,7 @@ export const contributions = pgTable(
     githubNodeId: text(),
     /** Null for private repositories: we don't store anything about them. */
     repoId: uuid().references(() => repositories.id, { onDelete: "set null" }),
-    /** Whether the repository belongs to the user's account (PLAN.md §4.1, ownership rules). */
+    /** Whether the repository belongs to the user's account. */
     repoOwnerIsUser: boolean().notNull(),
     /** Null for commits and private repositories. */
     title: text(),

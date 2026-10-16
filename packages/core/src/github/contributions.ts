@@ -1,4 +1,4 @@
-// Fetching a user's contributions from GitHub's GraphQL API (PLAN.md §4.2).
+// Fetching a user's contributions from GitHub's GraphQL API.
 
 import { RequestError } from "@octokit/request-error";
 import type { Octokit } from "@octokit/rest";

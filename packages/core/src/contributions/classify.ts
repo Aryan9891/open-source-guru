@@ -34,7 +34,7 @@ export type Classification =
   | { counted: false; excludedReason: ExcludedReason };
 
 /**
- * Whether a contribution is an Open Source Contribution (PLAN.md §4.1): made in a public,
+ * Whether a contribution is an Open Source Contribution: made in a public,
  * non-fork, OSI-licensed repository that isn't owned by the user's own account.
  *
  * Ownership is checked before the license, so the user's own projects are reported as such

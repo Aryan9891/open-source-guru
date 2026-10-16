@@ -17,7 +17,7 @@ export type Channel = typeof notificationChannels.$inferSelect;
 
 /**
  * First sign-in: the GitHub-verified primary email becomes an active channel right away
- * (no double opt-in needed, PLAN.md §3), then a welcome email is sent.
+ * (no double opt-in needed), then a welcome email is sent.
  */
 export async function onUserCreated(
   ctx: ApiContext,
