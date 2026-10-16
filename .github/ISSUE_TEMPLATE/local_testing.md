@@ -5,9 +5,8 @@ title: "local testing: test email notifications locally"
 labels: "local testing"
 ---
 
+### Description
+
 This is a dummy issue opened to check a local Open Source Guru setup. It doesn't need any action.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-labore et dolore magna aliqua.
-
+s
 Once the notification email shows up in Mailpit (http://localhost:8025), please close this issue.
