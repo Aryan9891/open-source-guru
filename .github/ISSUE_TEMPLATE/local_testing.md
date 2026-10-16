@@ -1,8 +1,8 @@
 ---
 name: Local testing
 about: "Contributors only: a dummy issue that triggers a notification in your local setup."
-title: "local testing: "
-labels: ["local testing"]
+title: "local testing: test email notifications locally"
+labels: "local testing"
 ---
 
 This is a dummy issue opened to check a local Open Source Guru setup. It doesn't need any action.
