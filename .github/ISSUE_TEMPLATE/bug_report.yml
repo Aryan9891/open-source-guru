@@ -1,0 +1,95 @@
+name: Bug report
+description: Something in Open Source Guru isn't working as it should.
+title: "bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please check the
+        [existing issues](https://github.com/tem-ctrl/open-source-guru/issues?q=is%3Aissue) and the
+        [FAQ](https://open-source-guru.dev/docs/faq) first: some surprises, like a contribution total
+        lower than GitHub's, are explained there.
+
+        **Found a security problem?** Don't open an issue: follow [SECURITY.md](https://github.com/tem-ctrl/open-source-guru/blob/main/SECURITY.md).
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of Open Source Guru is affected?
+      options:
+        - Subscriptions (following repositories, labels)
+        - Notification emails (issue alerts, digests, unsubscribing)
+        - Open Source Contributions (graph, counts)
+        - Streaks, goals and progress emails
+        - Public profile or README badge
+        - Account and settings (sign-in, email addresses, deletion)
+        - REST API or API keys
+        - Documentation site
+        - Local development or self-hosting (Docker, setup, scripts)
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did it happen?
+      options:
+        - open-source-guru.dev (hosted)
+        - Local development
+        - Self-hosted deployment
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug. Include error messages if there are any.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: |
+        If it involves a subscription, tell us the repository (`owner/name`) and labels. For the API,
+        include the request (without your API key).
+      placeholder: |
+        1. Follow `owner/repo` with the label "good first issue", emails right away
+        2. Add that label to an existing issue
+        3. Wait 10 minutes
+        4. No email arrives
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What you expected to happen instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Whatever applies. For local development, the commit you're on helps a lot.
+      placeholder: |
+        - Browser and OS: Firefox 140, macOS
+        - Your GitHub login (if it concerns your account or profile):
+        - Commit (`git rev-parse --short HEAD`):
+        - Node.js and pnpm versions:
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs, screenshots or anything else
+      description: |
+        API or worker logs, browser console output, screenshots. **Remove secrets** (API keys,
+        tokens, `.env` values) and email addresses you don't want public.
+      render: text
