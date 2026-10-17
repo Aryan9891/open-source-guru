@@ -17,7 +17,7 @@ and migrate differ only by command) and `web`. Their Dockerfiles are in [`docker
 
 ## How a release works
 
-1. A push to `main` runs the **Images** workflow, which pushes both images to GitHub Container
+1. A push to `main` runs the **Docker Build Push** workflow, which pushes both images to GitHub Container
    Registry, tagged with the commit SHA and `latest`.
 2. Deploy by hand on the VPS, from the deploy directory. Copy `docker-compose.prod.yml` there
    first if it changed. To roll back, use an older commit SHA.
