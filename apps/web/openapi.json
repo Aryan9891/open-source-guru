@@ -3325,6 +3325,24 @@
         "parameters": [
           {
             "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "color",
+            "required": false,
+            "description": "Background color of the message side (hex or CSS name)"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "description": "Badge size: small (default), medium, large, or height in pixels (15-100)"
+          },
+          {
+            "schema": {
               "type": "string",
               "pattern": "^[A-Za-z0-9-]{1,39}$"
             },

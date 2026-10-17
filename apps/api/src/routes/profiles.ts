@@ -151,6 +151,16 @@ export const profileRoutes =
           description:
             'An SVG badge with the Open Source Contributions of the last 12 months and the current streak. Cached for an hour. A grey "not available" badge (404) when the profile doesn\'t exist or is off.',
           params: loginParams,
+          querystring: z.object({
+            color: z
+              .string()
+              .optional()
+              .describe("Background color of the message side (hex or CSS name)"),
+            size: z
+              .string()
+              .optional()
+              .describe("Badge size: small (default), medium, large, or height in pixels (15-100)"),
+          }),
         },
       },
       async (request, reply) => {
@@ -159,10 +169,12 @@ export const profileRoutes =
           .header("cache-control", BADGE_CACHE)
           // Embedded on other sites (READMEs, blogs): allow cross-origin loading.
           .header("cross-origin-resource-policy", "cross-origin");
+        const { color, size } = request.query;
+        const options = { color, size };
         const user = await findPublicUser(ctx, request.params.login);
         if (!user) {
           // An image, not JSON: READMEs show it instead of a broken image.
-          return reply.code(404).send(renderBadge(BADGE_LABEL, "not available", true));
+          return reply.code(404).send(renderBadge(BADGE_LABEL, "not available", true, options));
         }
 
         const period = periodFor(ctx, undefined);
@@ -182,6 +194,8 @@ export const profileRoutes =
         return renderBadge(
           BADGE_LABEL,
           badgeMessage(days?.total ?? 0, { length: streak, period: user.streakPeriod }),
+          false,
+          options,
         );
       },
     );

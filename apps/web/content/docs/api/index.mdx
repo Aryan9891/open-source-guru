@@ -75,7 +75,7 @@ sends real requests from the page: paste your key in the `Authorization` field.
 | `PATCH` | `/v1/me/goals/{id}` | Change a goal's target, visibility or status |
 | `DELETE` | `/v1/me/goals/{id}` | Delete a goal |
 | `GET` | `/v1/public/profiles/{login}?year=` | A public profile (no key needed) |
-| `GET` | `/v1/public/profiles/{login}/badge.svg` | A README badge (no key needed; also at `/u/{login}/badge.svg`) |
+| `GET` | `/v1/public/profiles/{login}/badge.svg?color=&size=` | A README badge (no key needed; also at `/u/{login}/badge.svg`) |
 | `GET` | `/v1/public/repos/{owner}/{repo}/labels` | A repository's labels and open-issue counts (no key needed) |
 
 For security, an API key **can't** create or revoke API keys, nor delete your account: those need
