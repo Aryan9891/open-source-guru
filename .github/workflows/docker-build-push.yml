@@ -1,4 +1,4 @@
-name: Images
+name: Docker Build Push
 
 # Builds the production images and pushes them to GitHub Container Registry,
 # tagged with the commit SHA (what deploy.yml runs) and `latest`.
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: images-${{ github.ref }}
+  group: docker-build-push-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
