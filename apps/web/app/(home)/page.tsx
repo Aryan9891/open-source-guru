@@ -23,20 +23,7 @@ const steps = [
   },
 ];
 
-const comingSoon = [
-  {
-    title: "Streaks",
-    body: "Keep a weekly or daily streak of Open Source Contributions.",
-  },
-  {
-    title: "Goals",
-    body: "Set goals like three merged pull requests this month, and watch them fill up.",
-  },
-  {
-    title: "Public profile",
-    body: "A page that sums up your Open Source Contributions, with a badge for your README.",
-  },
-];
+const comingSoon: { title: string; body: string }[] = [];
 
 function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
@@ -150,25 +137,27 @@ export default function HomePage() {
 
       <ResourcesSection />
 
-      <section className="border-t border-border bg-surface">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-16 sm:px-6">
-          <SectionHeading eyebrow="Coming soon" title="Stay motivated" />
-          <ul className="grid gap-4 sm:grid-cols-3">
-            {comingSoon.map((item) => (
-              <li
-                key={item.title}
-                className="flex flex-col gap-2 rounded-lg border border-border bg-background p-6"
-              >
-                <span className="w-fit rounded-full bg-chip px-2.5 py-0.5 text-xs font-semibold text-chip-foreground">
-                  Coming soon
-                </span>
-                <h3 className="text-lg font-semibold">{item.title}</h3>
-                <p className="text-subtle">{item.body}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      {comingSoon.length > 0 && (
+        <section className="border-t border-border bg-surface">
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-16 sm:px-6">
+            <SectionHeading eyebrow="Coming soon" title="Stay motivated" />
+            <ul className="grid gap-4 sm:grid-cols-3">
+              {comingSoon.map((item) => (
+                <li
+                  key={item.title}
+                  className="flex flex-col gap-2 rounded-lg border border-border bg-background p-6"
+                >
+                  <span className="w-fit rounded-full bg-chip px-2.5 py-0.5 text-xs font-semibold text-chip-foreground">
+                    Coming soon
+                  </span>
+                  <h3 className="text-lg font-semibold">{item.title}</h3>
+                  <p className="text-subtle">{item.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       <footer className="border-t border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
