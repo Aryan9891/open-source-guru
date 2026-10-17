@@ -8,6 +8,7 @@ import { readPendingSubscription, withPendingSubscription } from "@/lib/pending-
 import { getCurrentUser } from "@/lib/session";
 import { appName } from "@/lib/shared";
 import { SignInButton } from "./_components/SignInButton";
+import { SignInErrorToast } from "./_components/SignInErrorToast";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -79,11 +80,7 @@ async function SignInPanel({
 
   return (
     <div className="flex flex-col gap-4">
-      {error && (
-        <p role="alert" className="rounded-md bg-surface-muted px-4 py-3 text-sm">
-          {errorMessages[error] ?? defaultErrorMessage}
-        </p>
-      )}
+      {error && <SignInErrorToast message={errorMessages[error] ?? defaultErrorMessage} />}
       {pending && (
         <div className="rounded-md border border-border bg-background px-4 py-3 text-sm">
           <p className="text-muted">After signing in, you'll follow</p>
