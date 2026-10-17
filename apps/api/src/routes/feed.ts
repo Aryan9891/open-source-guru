@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray, lt, sql } from "@osg/core/db/query";
+import { and, desc, eq, inArray, isNull, lt, ne, or, sql } from "@osg/core/db/query";
 import {
   deliveries,
   events,
@@ -72,7 +72,11 @@ export const feedRoutes =
             ),
           )
           .where(
-            and(inArray(events.id, matched), before ? lt(events.createdAt, before) : undefined),
+            and(
+              inArray(events.id, matched),
+              before ? lt(events.createdAt, before) : undefined,
+              or(isNull(issueSnapshots.state), ne(issueSnapshots.state, "closed")),
+            ),
           )
           .orderBy(desc(events.createdAt), desc(sql`${events.id}`))
           .limit(limit + 1);

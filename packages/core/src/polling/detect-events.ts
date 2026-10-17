@@ -75,3 +75,8 @@ export function detectIssueEvents({
       dedupeKey: `${repoId}:${issue.number}:labeled:${label.nodeId}:${issue.updatedAt.toISOString()}`,
     }));
 }
+
+/** Returns the issue numbers of all issues that are closed. */
+export function findClosedIssueNumbers(issues: GitHubIssue[]): number[] {
+  return issues.filter((issue) => issue.state === "closed").map((issue) => issue.number);
+}
