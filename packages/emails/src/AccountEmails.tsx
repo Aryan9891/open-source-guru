@@ -61,3 +61,29 @@ export function VerifyEmail({ address, verifyUrl, logoUrl }: VerifyEmailProps) {
     </Layout>
   );
 }
+
+export interface AccountDeletedEmailProps extends BrandProps {
+  login?: string;
+}
+
+export function AccountDeletedEmail({ login, logoUrl }: AccountDeletedEmailProps) {
+  return (
+    <Layout
+      logoUrl={logoUrl}
+      preview="Your Open Source Guru account has been deleted"
+      footerNote="If you did not request this deletion, please reach out to support immediately."
+    >
+      <Heading as="h1" style={headingStyle}>
+        Account deleted
+      </Heading>
+      <Text style={textStyle}>
+        {login ? `Hi ${login}, your` : "Your"} Open Source Guru account and all associated data have
+        been permanently deleted.
+      </Text>
+      <Text style={{ ...textStyle, margin: "0 0 20px" }}>
+        Your subscriptions, notification channels, and API keys have been removed. We're sorry to
+        see you go!
+      </Text>
+    </Layout>
+  );
+}

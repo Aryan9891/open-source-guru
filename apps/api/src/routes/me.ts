@@ -1,6 +1,7 @@
 import { eq } from "@osg/core/db/query";
 import { apikeys, users } from "@osg/core/db/schema";
 import { isValidTimezone } from "@osg/core/notifications/schedule";
+import { renderAccountDeletedEmail } from "@osg/emails";
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 import type { ApiContext } from "../context.ts";
@@ -98,13 +99,24 @@ export const meRoutes =
         },
       },
       async (request, reply) => {
-        const { id } = currentUser(request);
+        const { id, login } = currentUser(request);
+        const user = await ctx.db.query.users.findFirst({
+          columns: { email: true },
+          where: eq(users.id, id),
+        });
         await ctx.db.transaction(async (tx) => {
           // API keys reference the user without a foreign key (Better Auth plugin table).
           await tx.delete(apikeys).where(eq(apikeys.referenceId, id));
           // Everything else is removed by ON DELETE CASCADE.
           await tx.delete(users).where(eq(users.id, id));
         });
+        if (user?.email) {
+          const email = await renderAccountDeletedEmail({
+            login,
+            logoUrl: ctx.links.logo,
+          });
+          await ctx.mailer.send({ to: user.email, ...email });
+        }
         return reply.code(204).send(null);
       },
     );

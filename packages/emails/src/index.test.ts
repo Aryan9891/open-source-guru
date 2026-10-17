@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   type NotificationSection,
+  renderAccountDeletedEmail,
   renderGoalAchievedEmail,
   renderNotificationEmail,
   renderStreakReminderEmail,
@@ -84,6 +85,32 @@ describe("renderVerifyEmail", () => {
     // Every email has the logo, in brand colors.
     expect(email.html).toContain(LOGO);
     expect(email.html).toContain("#45056E");
+  });
+});
+
+describe("renderAccountDeletedEmail", () => {
+  it("renders account deletion confirmation with user login", async () => {
+    const email = await renderAccountDeletedEmail({
+      login: "ada",
+      logoUrl: LOGO,
+    });
+
+    expect(email.subject).toBe("Your Open Source Guru account has been deleted");
+    expect(email.html).toContain("Account deleted");
+    expect(email.html).toContain("Hi ada, your");
+    expect(email.html).toContain("permanently deleted");
+    expect(email.html).toContain(LOGO);
+    expect(email.text).toContain("Hi ada, your Open Source Guru account");
+  });
+
+  it("renders fallback text when login is omitted", async () => {
+    const email = await renderAccountDeletedEmail({
+      logoUrl: LOGO,
+    });
+
+    expect(email.subject).toBe("Your Open Source Guru account has been deleted");
+    expect(email.html).toContain("Account deleted");
+    expect(email.text).toContain("Your Open Source Guru account and all associated data");
   });
 });
 
