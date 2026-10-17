@@ -22,6 +22,8 @@ const cachedUserSchema = z.object({
   profilePublic: z.boolean(),
   streakReminders: z.boolean(),
   goalEmails: z.boolean(),
+  // Users cached before roles existed; the API's answer replaces it right after load.
+  role: z.enum(["user", "admin"]).default("user"),
 }) satisfies z.ZodType<CurrentUser>;
 
 export function readCachedUser(): CurrentUser | null {

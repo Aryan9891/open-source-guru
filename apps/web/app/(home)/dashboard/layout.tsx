@@ -26,7 +26,12 @@ async function DashboardGate({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex flex-wrap gap-8">
-      <DashboardNav login={user.login} name={user.name} image={user.image} />
+      <DashboardNav
+        login={user.login}
+        name={user.name}
+        image={user.image}
+        isAdmin={user.role === "admin"}
+      />
       <main className="min-w-0 flex-[999_1_560px]">{children}</main>
     </div>
   );

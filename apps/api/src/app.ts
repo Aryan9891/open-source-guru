@@ -15,6 +15,7 @@ import { z } from "zod";
 import type { ApiContext } from "./context.ts";
 import { ApiError } from "./errors.ts";
 import { betterAuthRoutes } from "./plugins/better-auth.ts";
+import { adminRoutes } from "./routes/admin.ts";
 import { apiKeyRoutes } from "./routes/api-keys.ts";
 import { channelRoutes } from "./routes/channels.ts";
 import { contributionRoutes } from "./routes/contributions.ts";
@@ -158,6 +159,7 @@ export async function buildApp(deps: AppDependencies, options: FastifyServerOpti
   await app.register(publicRoutes(deps));
   await app.register(profileRoutes(deps));
   await app.register(emailPreferenceRoutes(deps));
+  await app.register(adminRoutes(deps));
 
   return app;
 }

@@ -80,6 +80,14 @@
                       "type": "boolean",
                       "description": "Email when you reach a goal"
                     },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "user",
+                        "admin"
+                      ],
+                      "description": "Admins can open the admin dashboard"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -97,6 +105,7 @@
                     "profilePublic",
                     "streakReminders",
                     "goalEmails",
+                    "role",
                     "createdAt"
                   ],
                   "additionalProperties": false
@@ -200,6 +209,14 @@
                       "type": "boolean",
                       "description": "Email when you reach a goal"
                     },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "user",
+                        "admin"
+                      ],
+                      "description": "Admins can open the admin dashboard"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -217,6 +234,7 @@
                     "profilePublic",
                     "streakReminders",
                     "goalEmails",
+                    "role",
                     "createdAt"
                   ],
                   "additionalProperties": false

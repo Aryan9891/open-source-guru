@@ -13,6 +13,8 @@ export interface CurrentUser {
   profilePublic: boolean;
   streakReminders: boolean;
   goalEmails: boolean;
+  /** Admins can open the admin dashboard. */
+  role: "user" | "admin";
 }
 
 const apiInternalUrl = process.env.API_INTERNAL_URL ?? "http://localhost:4000";

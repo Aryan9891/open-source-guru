@@ -29,6 +29,13 @@
       "when": 1792041811523,
       "tag": "0003_streak_reminders",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792228810146,
+      "tag": "0004_user_roles",
+      "breakpoints": true
     }
   ]
 }

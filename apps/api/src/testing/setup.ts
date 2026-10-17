@@ -1,5 +1,7 @@
 // Shared setup for the API integration tests: a throwaway PostgreSQL per test file,
 // the real app with Better Auth, a fake GitHub and an in-memory mailer.
+import { eq } from "@osg/core/db/query";
+import { users } from "@osg/core/db/schema";
 import type { GitHubApi, GitHubRepository } from "@osg/core/github";
 import { createEmailLinks } from "@osg/core/links";
 import { createMemorySender } from "@osg/core/mail";
@@ -82,6 +84,13 @@ export async function createTestApi(database: TestDatabase) {
     return { user, cookie };
   }
 
+  /** Signs a user up with the admin role. */
+  async function signUpAdmin(login = "root") {
+    const account = await signUp(login);
+    await database.db.update(users).set({ role: "admin" }).where(eq(users.id, account.user.id));
+    return account;
+  }
+
   /** Signs up and follows `acme/repo` with the default channel. */
   async function signUpAndSubscribe(login = "ada") {
     const { user, cookie } = await signUp(login);
@@ -100,5 +109,5 @@ export async function createTestApi(database: TestDatabase) {
     return { user, cookie, subscription, channelId };
   }
 
-  return { app, ctx, github, mailer, signUp, signUpAndSubscribe };
+  return { app, ctx, github, mailer, signUp, signUpAdmin, signUpAndSubscribe };
 }

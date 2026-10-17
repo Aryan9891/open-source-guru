@@ -21,10 +21,12 @@ export function DashboardNav({
   login,
   name,
   image,
+  isAdmin,
 }: {
   login: string;
   name: string;
   image: string | null;
+  isAdmin: boolean;
 }) {
   const pathname = usePathname();
 
@@ -78,7 +80,15 @@ export function DashboardNav({
         </ul>
       </nav>
 
-      <div className="border-t border-border pt-4">
+      <div className="flex flex-col items-start gap-3 border-t border-border pt-4">
+        {isAdmin && (
+          <Link
+            href={ROUTES.admin.overview}
+            className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
+          >
+            Admin dashboard →
+          </Link>
+        )}
         <SignOutButton />
       </div>
     </aside>
