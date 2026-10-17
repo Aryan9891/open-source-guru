@@ -22,7 +22,7 @@ const database = useTestDatabase();
 const setup = () => createWorkerTest(database());
 
 const openSource = ghRepo(10);
-const unlicensed = ghRepo(11, { licenseSpdxId: null });
+const forked = ghRepo(11, { isFork: true });
 const own = ghRepo(12, { ownerGithubId: USER_GITHUB_ID });
 const secret = ghRepo(13, { isPrivate: true, name: "secret-project" });
 
@@ -41,7 +41,7 @@ describe("syncContributionYear", () => {
       // Commit days arrive as midnight Pacific time.
       contribution("commit", openSource, "2026-03-03T08:00:00Z", { count: 3 }),
       contribution("pull_request", openSource, "2026-03-03T15:00:00Z", { prState: "merged" }),
-      contribution("issue", unlicensed, "2026-03-04T10:00:00Z"),
+      contribution("issue", forked, "2026-03-04T10:00:00Z"),
       contribution("commit", own, "2026-03-04T08:00:00Z", { count: 9 }),
       contribution("review", secret, "2026-03-05T10:00:00Z", { title: "Secret PR" }),
     ];
@@ -63,7 +63,7 @@ describe("syncContributionYear", () => {
       ["commit", "2026-03-03", 3, true, null],
       ["pull_request", "2026-03-03", 1, true, null],
       ["commit", "2026-03-04", 9, false, "own_repo"],
-      ["issue", "2026-03-04", 1, false, "no_license"],
+      ["issue", "2026-03-04", 1, false, "fork"],
       ["review", "2026-03-05", 1, false, "private"],
       ["discussion", "2026-03-05", 1, true, null],
     ]);
@@ -77,7 +77,7 @@ describe("syncContributionYear", () => {
     expect(repos.map((repo) => repo.githubId).sort()).toEqual([10, 11, 12, 99]);
     expect(repos.find((repo) => repo.githubId === 11)).toMatchObject({
       isOpenSource: false,
-      licenseSpdxId: null,
+      isFork: true,
       ownerGithubId: 500,
     });
 
@@ -167,19 +167,19 @@ describe("findContributionSyncsDue", () => {
 });
 
 describe("reclassifyRepositories", () => {
-  it("recounts contributions when a repository's license or owner changes", async () => {
+  it("recounts contributions when a repository's fork status or owner changes", async () => {
     const { ctx, contributions: github, advance, user } = await setup();
     github.state.contributions = [
       contribution("issue", openSource, "2026-04-01T10:00:00Z"),
-      contribution("issue", unlicensed, "2026-04-02T10:00:00Z"),
+      contribution("issue", forked, "2026-04-02T10:00:00Z"),
     ];
     await syncContributionYear(ctx, user.id, 2026);
     expect(await days(user.id)).toEqual([{ date: "2026-04-01", count: 1 }]);
 
-    // A week later: the first repository was transferred to the user, the second got a license.
+    // A week later: the first repository was transferred to the user, the second is no longer a fork.
     advance(RECLASSIFY_AFTER_MS + 1);
     github.state.repos.set(10, { ...openSource, ownerGithubId: USER_GITHUB_ID });
-    github.state.repos.set(11, { ...unlicensed, licenseSpdxId: "Apache-2.0" });
+    github.state.repos.set(11, { ...forked, isFork: false });
 
     expect(await reclassifyRepositories(ctx)).toEqual({ checked: 2, changed: 2 });
 

@@ -51,6 +51,7 @@ export async function reclassifyRepositories(
     const outcomeChanged =
       facts.ownerGithubId !== repo.ownerGithubId ||
       facts.isPrivate !== repo.isPrivate ||
+      facts.isFork !== repo.isFork ||
       isOpenSource !== repo.isOpenSource;
 
     const recounted = await db.transaction(async (tx) => {

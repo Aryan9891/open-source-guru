@@ -1,5 +1,4 @@
 import type { ExcludedReason } from "../db/schema/contributions.ts";
-import { licenseStatus } from "./licenses.ts";
 
 /** What we know about a repository from GitHub. */
 export interface RepoFacts {
@@ -11,22 +10,13 @@ export interface RepoFacts {
 }
 
 /**
- * Why a repository's contributions can't count for anyone: private, a fork, or no OSI-approved
- * license. Null for an open-source repository. Cached as `repositories.is_open_source`.
+ * Why a repository's contributions can't count for anyone: private, or a fork.
+ * Null for an open-source repository. Cached as `repositories.is_open_source`.
  */
 export function repoExclusion(repo: RepoFacts): ExcludedReason | null {
   if (repo.isPrivate) return "private";
   if (repo.isFork) return "fork";
-  switch (licenseStatus(repo.licenseSpdxId)) {
-    case "osi_approved":
-      return null;
-    case "not_osi_approved":
-      return "not_osi_approved";
-    case "unknown":
-      return "unknown_license";
-    case "none":
-      return "no_license";
-  }
+  return null;
 }
 
 export type Classification =

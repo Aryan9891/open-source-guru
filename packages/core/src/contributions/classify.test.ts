@@ -28,22 +28,37 @@ describe("licenseStatus", () => {
 });
 
 describe("repoExclusion", () => {
-  it("is null for a public, non-fork repository with an OSI-approved license", () => {
+  it("is null for a public, non-fork repository regardless of license", () => {
     expect(repoExclusion(openSource)).toBeNull();
+    expect(repoExclusion({ ...openSource, licenseSpdxId: null })).toBeNull();
+    expect(repoExclusion({ ...openSource, licenseSpdxId: "CC0-1.0" })).toBeNull();
+    expect(repoExclusion({ ...openSource, licenseSpdxId: "NOASSERTION" })).toBeNull();
   });
 
   it("gives the reason otherwise", () => {
     expect(repoExclusion({ ...openSource, isPrivate: true })).toBe("private");
     expect(repoExclusion({ ...openSource, isFork: true })).toBe("fork");
-    expect(repoExclusion({ ...openSource, licenseSpdxId: null })).toBe("no_license");
-    expect(repoExclusion({ ...openSource, licenseSpdxId: "CC0-1.0" })).toBe("not_osi_approved");
-    expect(repoExclusion({ ...openSource, licenseSpdxId: "NOASSERTION" })).toBe("unknown_license");
   });
 });
 
 describe("classifyContribution", () => {
   it("counts contributions to someone else's open-source repository", () => {
     expect(classifyContribution(openSource, USER)).toEqual({
+      counted: true,
+      excludedReason: null,
+    });
+  });
+
+  it("counts contributions to open-source repositories without a detected license (e.g. freeCodeCamp)", () => {
+    expect(classifyContribution({ ...openSource, licenseSpdxId: null }, USER)).toEqual({
+      counted: true,
+      excludedReason: null,
+    });
+    expect(classifyContribution({ ...openSource, licenseSpdxId: "CC0-1.0" }, USER)).toEqual({
+      counted: true,
+      excludedReason: null,
+    });
+    expect(classifyContribution({ ...openSource, licenseSpdxId: "NOASSERTION" }, USER)).toEqual({
       counted: true,
       excludedReason: null,
     });
@@ -61,12 +76,5 @@ describe("classifyContribution", () => {
     const own = { ...openSource, ownerGithubId: USER };
     expect(classifyContribution({ ...own, isPrivate: true }, USER).excludedReason).toBe("private");
     expect(classifyContribution({ ...own, isFork: true }, USER).excludedReason).toBe("fork");
-  });
-
-  it("excludes repositories without an OSI-approved license", () => {
-    expect(classifyContribution({ ...openSource, licenseSpdxId: null }, USER)).toEqual({
-      counted: false,
-      excludedReason: "no_license",
-    });
   });
 });
