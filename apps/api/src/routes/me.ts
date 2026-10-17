@@ -21,7 +21,14 @@ const userResponse = z.object({
     .boolean()
     .describe("Email when your streak needs a contribution: Fridays (weekly) or evenings (daily)"),
   goalEmails: z.boolean().describe("Email when you reach a goal"),
+  role: z.enum(["user", "admin"]).describe("Admins can open the admin dashboard"),
   createdAt: z.date(),
+});
+
+/** The role is stored only for admins (null means a regular user). */
+const withRole = <T extends { role: "admin" | null }>(user: T) => ({
+  ...user,
+  role: user.role ?? ("user" as const),
 });
 
 export const meRoutes =
@@ -40,7 +47,7 @@ export const meRoutes =
           where: eq(users.id, currentUser(request).id),
         });
         if (!user) throw notFound("User");
-        return user;
+        return withRole(user);
       },
     );
 
@@ -74,7 +81,7 @@ export const meRoutes =
           .where(eq(users.id, currentUser(request).id))
           .returning();
         if (!user) throw notFound("User");
-        return user;
+        return withRole(user);
       },
     );
 

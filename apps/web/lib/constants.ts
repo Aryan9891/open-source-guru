@@ -15,4 +15,11 @@ export const ROUTES = {
     settings: "/dashboard/settings",
     apiKeys: "/dashboard/api-keys",
   },
+  /** Admins only; everyone else gets a 404. */
+  admin: {
+    overview: "/admin-dashboard",
+    users: "/admin-dashboard/users",
+    repositories: "/admin-dashboard/repositories",
+    labels: "/admin-dashboard/labels",
+  },
 } as const;

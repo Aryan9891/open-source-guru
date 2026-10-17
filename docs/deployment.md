@@ -105,6 +105,16 @@ docker compose -f docker-compose.prod.yml logs -f api worker
 docker compose -f docker-compose.prod.yml exec postgres psql -U osg osg
 ```
 
+### Admins
+
+The admin dashboard (`/admin-dashboard`) is only open to users with the admin role. To create the
+first admin, set `ADMIN_LOGINS` in `.env` to your GitHub login and restart the API: the account
+gets the role at startup, or on its first sign-in. Grant the role to others from
+**Admin → Users**; admins can't change their own role, so there is always at least one. Removing
+a login from `ADMIN_LOGINS` doesn't remove the role: do it from the dashboard. Once the first
+admin exists, you can empty `ADMIN_LOGINS` (a GitHub login can be renamed and taken by someone
+else).
+
 Logs are rotated by Docker (5 × 10 MB per container).
 
 Backups aren't set up yet: PLAN.md §14 calls for daily `pg_dump` to off-server object storage.

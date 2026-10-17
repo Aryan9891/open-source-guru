@@ -2,7 +2,7 @@
 // Generated with `pnpm --filter @osg/api auth:schema`, then edited:
 // - `githubId` is a unique bigint (GitHub IDs can exceed 32 bits),
 // - timestamps are stored with time zone,
-// - `streakPeriod` is typed.
+// - `streakPeriod` and `role` are typed.
 // After regenerating, re-apply these edits before running `pnpm db:generate`.
 import { relations, sql } from "drizzle-orm";
 import {
@@ -15,6 +15,9 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+
+/** `admin` can open the admin dashboard and grant the role to other users. */
+export type UserRole = "user" | "admin";
 
 export const users = pgTable("users", {
   id: uuid("id").default(sql`pg_catalog.gen_random_uuid()`).primaryKey(),
@@ -37,6 +40,8 @@ export const users = pgTable("users", {
   streakPeriod: text("streak_period").$type<"week" | "day">().default("week").notNull(),
   streakReminders: boolean("streak_reminders").default(false).notNull(),
   goalEmails: boolean("goal_emails").default(false).notNull(),
+  /** Null for regular users: only `admin` is stored. */
+  role: text("role").$type<"admin">(),
 });
 
 export const sessions = pgTable(

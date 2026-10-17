@@ -1,5 +1,5 @@
 import { eq } from "@osg/core/db/query";
-import { users } from "@osg/core/db/schema";
+import { type UserRole, users } from "@osg/core/db/schema";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { API_KEY_PREFIX } from "../auth.ts";
 import type { ApiContext } from "../context.ts";
@@ -7,6 +7,7 @@ import type { ApiContext } from "../context.ts";
 export interface AuthenticatedUser {
   id: string;
   login: string;
+  role: UserRole;
   /** How the request was authenticated. Some actions require a browser session. */
   via: "session" | "api_key";
 }
@@ -43,15 +44,20 @@ async function resolveUser(
     const result = await ctx.auth.api.verifyApiKey({ body: { key: apiKey } });
     if (!result.valid || !result.key) return null;
     const user = await ctx.db.query.users.findFirst({
-      columns: { id: true, login: true },
+      columns: { id: true, login: true, role: true },
       where: eq(users.id, result.key.referenceId),
     });
-    return user ? { ...user, via: "api_key" } : null;
+    return user ? { ...user, role: user.role ?? "user", via: "api_key" } : null;
   }
 
   const session = await ctx.auth.api.getSession({ headers: toWebHeaders(request) });
   if (!session) return null;
-  return { id: session.user.id, login: session.user.login, via: "session" };
+  return {
+    id: session.user.id,
+    login: session.user.login,
+    role: session.user.role === "admin" ? "admin" : "user",
+    via: "session",
+  };
 }
 
 const unauthorized = (reply: FastifyReply) =>
@@ -77,6 +83,16 @@ export const requireSession = (ctx: ApiContext) =>
         error: "session_required",
         message: "This action is only available from the web app, not with an API key.",
       });
+    }
+  };
+
+/** preHandler: requires an admin's browser session. Others get a 404, as if nothing was there. */
+export const requireAdmin = (ctx: ApiContext) =>
+  async function requireAdminHandler(request: FastifyRequest, reply: FastifyReply) {
+    request.user = await resolveUser(ctx, request);
+    if (!request.user) return unauthorized(reply);
+    if (request.user.via !== "session" || request.user.role !== "admin") {
+      return reply.code(404).send({ error: "not_found", message: "Not found." });
     }
   };
 

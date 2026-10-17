@@ -7,6 +7,7 @@ import { buildApp } from "./app.ts";
 import { createAuth } from "./auth.ts";
 import type { ApiContext } from "./context.ts";
 import { loadApiEnv } from "./env.ts";
+import { promoteAdminLogins } from "./services/admin-roles.ts";
 import { onUserCreated } from "./services/channels.ts";
 
 const env = loadApiEnv();
@@ -26,6 +27,7 @@ Object.assign(ctx, {
     db: database.db,
     secret: env.BETTER_AUTH_SECRET,
     webUrl: env.WEB_URL,
+    adminLogins: env.ADMIN_LOGINS,
     github: { clientId: env.GITHUB_APP_CLIENT_ID, clientSecret: env.GITHUB_APP_CLIENT_SECRET },
     onUserCreated: async (user) => {
       try {
@@ -60,5 +62,10 @@ const shutdown = async (signal: NodeJS.Signals) => {
 
 process.once("SIGINT", shutdown);
 process.once("SIGTERM", shutdown);
+
+// Existing accounts listed in ADMIN_LOGINS; new ones become admins when they first sign in.
+const promoted = await promoteAdminLogins(database.db, env.ADMIN_LOGINS);
+if (promoted.length > 0)
+  app.log.info({ logins: promoted }, "granted the admin role (ADMIN_LOGINS)");
 
 await app.listen({ host: env.API_HOST, port: env.API_PORT });

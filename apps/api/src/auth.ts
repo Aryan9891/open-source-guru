@@ -10,6 +10,8 @@ export interface AuthConfig {
   /** Public URL of the web app; auth routes are served under `${webUrl}/api/auth`. */
   webUrl: string;
   github: { clientId: string; clientSecret: string };
+  /** Lowercased GitHub logins that get the admin role when their account is created. */
+  adminLogins?: readonly string[];
   /** Runs once, after a user signs in for the first time. */
   onUserCreated?: (user: { id: string; email: string; emailVerified: boolean }) => Promise<void>;
 }
@@ -90,6 +92,9 @@ export function createAuth(config: AuthConfig) {
         streakPeriod: { type: "string", required: true, defaultValue: "week", input: false },
         streakReminders: { type: "boolean", required: true, defaultValue: false, input: false },
         goalEmails: { type: "boolean", required: true, defaultValue: false, input: false },
+        // Granted by other admins (/v1/admin/users) or ADMIN_LOGINS; never by the client.
+        // Null for regular users.
+        role: { type: "string", required: false, input: false },
       },
     },
     account: {
@@ -98,6 +103,11 @@ export function createAuth(config: AuthConfig) {
     databaseHooks: {
       user: {
         create: {
+          before: async (user) => {
+            const login = (user as { login?: string }).login?.toLowerCase();
+            const isAdmin = login !== undefined && config.adminLogins?.includes(login);
+            return { data: { ...user, role: isAdmin ? "admin" : null } };
+          },
           after: async (user) => {
             await config.onUserCreated?.(user);
           },
