@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { buttonClasses } from "@/components/ui/Button";
 import { type SignInRedirects, startGitHubSignIn } from "@/lib/auth-client";
 
@@ -14,31 +15,27 @@ function GitHubMark() {
 
 /** Starts the GitHub sign-in; stays disabled while the browser is being redirected. */
 export function SignInButton({ redirects }: { redirects: SignInRedirects }) {
-  const [state, setState] = useState<"idle" | "redirecting" | "failed">("idle");
+  const [state, setState] = useState<"idle" | "redirecting">("idle");
 
   async function onClick() {
     setState("redirecting");
     try {
       await startGitHubSignIn(redirects);
     } catch {
-      setState("failed");
+      setState("idle");
+      toast.error("We couldn't start the sign-in. Please try again in a moment.");
     }
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <button
-        type="button"
-        onClick={onClick}
-        disabled={state === "redirecting"}
-        className={buttonClasses({ size: "lg", className: "w-full" })}
-      >
-        <GitHubMark />
-        {state === "redirecting" ? "Opening GitHub…" : "Continue with GitHub"}
-      </button>
-      <p aria-live="polite" className="text-sm text-danger empty:hidden">
-        {state === "failed" ? "We couldn't start the sign-in. Please try again in a moment." : ""}
-      </p>
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={state === "redirecting"}
+      className={buttonClasses({ size: "lg", className: "w-full" })}
+    >
+      <GitHubMark />
+      {state === "redirecting" ? "Opening GitHub…" : "Continue with GitHub"}
+    </button>
   );
 }
