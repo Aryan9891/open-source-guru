@@ -163,7 +163,12 @@ export default function HomePage() {
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p>
             {appName} is open source.{" "}
-            <a href={githubRepoUrl} className="font-semibold text-primary hover:text-accent">
+            <a
+              href={githubRepoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary hover:text-accent"
+            >
               View it on GitHub
             </a>
           </p>
