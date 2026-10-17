@@ -3,19 +3,19 @@ name: CI
 on:
   push: # Will completely disable pushes directly to main in the future
     branches: [main]
-  pull_request_target:
-    types: [opened, reopened, edited]
+  pull_request:
+    branches: [main]
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
 
 jobs:
   commitlint:
-    if: github.event_name == 'pull_request_target'
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -35,8 +35,8 @@ jobs:
       - name: Check commit messages (Conventional Commits)
         run: >-
           pnpm commitlint
-          --from ${{ github.event.pull_request_target.base.sha }}
-          --to ${{ github.event.pull_request_target.head.sha }}
+          --from ${{ github.event.pull_request.base.sha }}
+          --to ${{ github.event.pull_request.head.sha }}
           --verbose
 
   check:
