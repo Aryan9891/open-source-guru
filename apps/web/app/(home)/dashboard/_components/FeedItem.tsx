@@ -61,7 +61,12 @@ export function FeedItem({ entry }: { entry: FeedEntry }) {
       className={`flex flex-col gap-3 rounded-lg border border-border bg-surface p-5 ${muted ? "opacity-70" : ""}`}
     >
       <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-sm text-muted">
-        <a href={entry.repo.url} className="hover:text-accent">
+        <a
+          href={entry.repo.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-accent"
+        >
           {entry.repo.fullName}
         </a>
         <span aria-hidden="true">·</span>
@@ -73,7 +78,12 @@ export function FeedItem({ entry }: { entry: FeedEntry }) {
         </span>
       </p>
       <h3 className="text-lg font-semibold leading-snug">
-        <a href={entry.issue.url} className="hover:text-accent">
+        <a
+          href={entry.issue.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-accent"
+        >
           #{entry.issue.number} {entry.issue.title}
         </a>
       </h3>
