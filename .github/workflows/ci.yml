@@ -1,13 +1,14 @@
 name: CI
 
 on:
-  push:
+  push: # Will completely disable pushes directly to main in the future
     branches: [main]
   pull_request:
+    branches: [main]
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
