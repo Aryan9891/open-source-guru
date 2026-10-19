@@ -1,6 +1,8 @@
 import { render, toPlainText } from "@react-email/render";
 import { createElement } from "react";
 import {
+  AccountDeletedEmail,
+  type AccountDeletedEmailProps,
   VerifyEmail,
   type VerifyEmailProps,
   WelcomeEmail,
@@ -20,7 +22,11 @@ import {
   streakReminderSubject,
 } from "./ProgressEmails.tsx";
 
-export type { VerifyEmailProps, WelcomeEmailProps } from "./AccountEmails.tsx";
+export type {
+  AccountDeletedEmailProps,
+  VerifyEmailProps,
+  WelcomeEmailProps,
+} from "./AccountEmails.tsx";
 export type {
   NotificationEmailProps,
   NotificationIssue,
@@ -52,6 +58,12 @@ export const renderWelcomeEmail = (props: WelcomeEmailProps) =>
 
 export const renderVerifyEmail = (props: VerifyEmailProps) =>
   renderEmail("Confirm your email address", createElement(VerifyEmail, props));
+
+export const renderAccountDeletedEmail = (props: AccountDeletedEmailProps) =>
+  renderEmail(
+    "Your Open Source Guru account has been deleted",
+    createElement(AccountDeletedEmail, props),
+  );
 
 export const renderStreakReminderEmail = (props: StreakReminderEmailProps) =>
   renderEmail(streakReminderSubject(props), createElement(StreakReminderEmail, props));
