@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { detectIssueEvents, type GitHubIssue } from "./detect-events.ts";
+import { detectIssueEvents, findClosedIssueNumbers, type GitHubIssue } from "./detect-events.ts";
 
 const helpWanted = { nodeId: "LA_1", name: "help wanted", color: "008672" };
 const goodFirstIssue = { nodeId: "LA_2", name: "good first issue", color: "7057ff" };
@@ -104,5 +104,22 @@ describe("detectIssueEvents", () => {
     });
 
     expect(first[0]?.dedupeKey).not.toBe(again[0]?.dedupeKey);
+  });
+});
+
+describe("findClosedIssueNumbers", () => {
+  it("extracts closed issue numbers and ignores open ones", () => {
+    const issues = [
+      issue({ number: 10, state: "open" }),
+      issue({ number: 20, state: "closed" }),
+      issue({ number: 30, state: "open" }),
+      issue({ number: 40, state: "closed" }),
+    ];
+    expect(findClosedIssueNumbers(issues)).toEqual([20, 40]);
+  });
+
+  it("returns an empty array when no issues are closed", () => {
+    const issues = [issue({ number: 1, state: "open" }), issue({ number: 2, state: "open" })];
+    expect(findClosedIssueNumbers(issues)).toEqual([]);
   });
 });

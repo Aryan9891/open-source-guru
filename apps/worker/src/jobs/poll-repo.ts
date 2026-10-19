@@ -2,7 +2,7 @@ import type { DatabaseOrTransaction } from "@osg/core/db";
 import { and, eq, inArray, sql } from "@osg/core/db/query";
 import { events, issueSnapshots, repositories } from "@osg/core/db/schema";
 import { RepositoryNotFoundError } from "@osg/core/github";
-import { detectIssueEvents, type GitHubIssue } from "@osg/core/polling";
+import { detectIssueEvents, findClosedIssueNumbers, type GitHubIssue } from "@osg/core/polling";
 import type { WorkerContext } from "../context.ts";
 
 /**
@@ -140,7 +140,23 @@ export async function pollRepository(ctx: WorkerContext, repoId: string): Promis
               .onConflictDoNothing({ target: events.dedupeKey })
               .returning({ id: events.id });
 
-      await upsertSnapshots(tx, repo.id, issues, now);
+      const closedNumbers = findClosedIssueNumbers(issues);
+      if (closedNumbers.length > 0) {
+        await tx
+          .delete(events)
+          .where(and(eq(events.repoId, repo.id), inArray(events.issueNumber, closedNumbers)));
+        await tx
+          .delete(issueSnapshots)
+          .where(
+            and(
+              eq(issueSnapshots.repoId, repo.id),
+              inArray(issueSnapshots.issueNumber, closedNumbers),
+            ),
+          );
+      }
+
+      const openIssues = issues.filter((issue) => issue.state === "open");
+      await upsertSnapshots(tx, repo.id, openIssues, now);
       await tx
         .update(repositories)
         .set({
