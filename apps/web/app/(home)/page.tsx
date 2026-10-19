@@ -124,7 +124,7 @@ export default function HomePage() {
         <pre className="overflow-x-auto rounded-xl bg-plum p-6 font-mono text-sm leading-relaxed text-petal">
           <code>
             <span className="text-wisteria"># Follow help wanted issues in freeCodeCamp</span>
-            {"\n"}curl https://&lt;domain&gt;/api/v1/me/subscriptions \{"\n"}
+            {"\n"}curl https://open-source-guru.dev/api/v1/me/subscriptions \{"\n"}
             {"  "}-H <span className="text-coral">"Authorization: Bearer $OSG_KEY"</span> \{"\n"}
             {"  "}-H <span className="text-coral">"content-type: application/json"</span> \{"\n"}
             {"  "}-d{" "}
